@@ -22,5 +22,7 @@ class UserController extends Controller
         return view('user.dashboard', compact('siswa', 'user'));
     }
 
+   
+
     
 }

@@ -29,6 +29,16 @@
 
                     
                     @endif
+
+                    @if(Auth::user()->role == 'user')
+                    <x-nav-link  class="text-gray-900">
+                        {{ __('Pembayaran') }}
+                    </x-nav-link>
+
+                    @endif
+
+               
+               
                 </div>
             </div>
 

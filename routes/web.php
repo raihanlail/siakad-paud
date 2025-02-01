@@ -6,6 +6,7 @@ use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\user\DaftarSiswaController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -53,8 +54,12 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function() {
 
 });
 
+
 Route::middleware(['auth', 'userMiddleware'])->group(function() {
     Route::get('/user/dashboard',[UserController::class, 'index'])->name('user.dashboard');
+    Route::get('/user/daftar', [DaftarSiswaController::class, 'index'])->name('user.daftar');
+    
+    Route::post('/user/daftar', [DaftarSiswaController::class, 'store'])->name('user.daftar.store');
     
 
 });
