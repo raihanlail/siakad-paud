@@ -13,7 +13,7 @@ class NilaiController extends Controller
 {
     public function index()
     {
-        $nilai = Nilai::with('siswa', 'mataPelajaran')->get();
+        $nilai = Nilai::with('siswa', 'mataPelajaran')->latest()->get();
         $siswa = Siswa::all();
         $mapel = MataPelajaran::all();
         
@@ -63,6 +63,17 @@ class NilaiController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Nilai berhasil disimpan.');
+    }
+
+    public function update(Request $request, $id)
+    {
+        $nilai = Nilai::findOrFail($id);
+        $nilai->update([
+            'siswa_id' => $request->siswa_id,
+            'mata_pelajaran_id' => $request->mata_pelajaran_id,
+            'nilai' => $request->nilai
+        ]);
+        return redirect()->back()->with('success', 'Nilai berhasil diperbarui.');
     }
 
     

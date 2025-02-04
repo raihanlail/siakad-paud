@@ -29,7 +29,7 @@
                                     <th scope="col" class="px-6 py-3">Nama Mapel</th>
                                     <th scope="col" class="px-6 py-3">Kode</th>
                                     <th scope="col" class="px-6 py-3">Data Nilai</th>
-                                    <th scope="col" class="px-6 py-3">Aksi</th>
+                                   
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,10 +45,7 @@
                                                 </x-secondary-button>
                                             </a>
                                         </td>
-                                        <td class="px-6 py-4">
-                                            <a href="#" class="text-blue-600 hover:text-blue-900">Edit</a>
-                                            <a href="#" class="text-red-600 hover:text-red-900 ml-2">Delete</a>
-                                        </td>
+                                       
                                     </tr>
                                 @empty
                                     <tr class="bg-white border-b border-gray-200">
@@ -98,6 +95,7 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 placeholder="{{ __('Masukkan Nama') }}"
+                                required
                             />
                         </div>
 
@@ -110,6 +108,7 @@
                                 type="text"
                                 class="mt-1 block w-full"
                                 placeholder="{{ __('Masukkan Kode') }}"
+                                required
                             />
                         </div>
 

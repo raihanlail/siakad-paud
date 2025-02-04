@@ -13,14 +13,17 @@
                         <span class="text-xl font-semibold">{{ __("Halo,") }} {{$user->name}}!</span>
                         <p class="text-gray-600 mt-2">Berikut adalah nilai anak-anak anda</p>
                     </div>
-                    <a href="{{route('user.daftar')}}" class="transition duration-150 ease-in-out">
-                        <x-primary-button class="hover:scale-105">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                            </svg>
-                            {{ __('Daftar Siswa') }}
-                        </x-primary-button>
-                    </a>
+                    <div class="flex space-x-4">
+                       
+                        <a href="{{route('user.daftar')}}" class="transition duration-150 ease-in-out">
+                            <x-primary-button class="hover:scale-105">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="hidden sm:block h-3 sm:h-3 w-2 sm:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                                </svg>
+                                {{ __('Daftar Siswa') }}
+                            </x-primary-button>
+                        </a>
+                    </div>
                 </div>
             </div>
 
@@ -40,6 +43,18 @@
                                 <h2 class="text-2xl font-bold text-gray-800">{{ $item->nama }}</h2>
                                 <p class="text-gray-600">NIS: {{ $item->nis }}</p>
                             </div>
+                            
+                            <div class="flex flex-row gap-4">
+                                <a href="#" class="transition duration-150 ease-in-out">
+                                    <x-secondary-button class="hover:scale-105">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="hidden sm:block h-3 sm:h-3 w-2 sm:w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586L7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
+                                        </svg>
+                                        {{ __('download') }}
+                                    </x-secondary-button>
+                                </a>
+
+                           
                             <div class="text-right">
                                 <p class="text-sm text-gray-600 mb-1">Status Pembayaran:</p>
                                 <span class="px-4 py-2 rounded-full text-sm font-semibold
@@ -54,6 +69,7 @@
                                     {{$item->bayar->status ?? 'Belum ada data'}}
                                 </span>
                             </div>
+                        </div>
                         </div>
 
                         @if ($item->nilai->isEmpty())

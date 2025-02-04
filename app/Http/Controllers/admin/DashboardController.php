@@ -14,10 +14,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $user = User::count();
-        $guru = Guru::count();
-        $siswa = Siswa::count();
-        $mapel = MataPelajaran::count();
-        return view('admin.dashboard', compact('user', 'guru', 'siswa', 'mapel'));
+        $totaluser = User::count();
+        $totalguru = Guru::count();
+        $totalsiswa = Siswa::count();
+        $totalmapel = MataPelajaran::count();
+        return view('admin.dashboard', compact('totaluser', 'totalguru', 'siswa', 'mapel'));
     }
 }

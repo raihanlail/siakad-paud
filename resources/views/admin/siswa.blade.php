@@ -33,7 +33,7 @@
                             <tbody>
                                 @forelse ($siswa as $index => $g)
                                     <tr class="bg-white border-b border-gray-200">
-                                        <td class="px-6 py-4">{{ $index + 1 }}</td>
+                                        <td class="px-6 py-4">{{ $index + 1}}</td>
                                         <td class="px-6 py-4">{{ $g->nama }}</td>
                                         <td class="px-6 py-4">{{ $g->nis }}</td>
                                         <td class="px-6 py-4">{{ $g->alamat }}</td>
@@ -69,8 +69,10 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        <div class="mt-4">
+                            {{ $siswa->links() }}
+                        </div>
                     </div>
-
                 </div>
             </div>
         </div>

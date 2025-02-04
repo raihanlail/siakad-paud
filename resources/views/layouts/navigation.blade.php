@@ -26,12 +26,15 @@
                     <x-nav-link :href="route('admin.mapel')" :active="request()->routeIs('admin.mapel')" class="text-gray-900">
                         {{ __('Data Mapel') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('admin.pembayaran')" :active="request()->routeIs('admin.pembayaran')" class="text-gray-900">
+                        {{ __('Data Pembayaran') }}
+                    </x-nav-link>
 
                     
                     @endif
 
                     @if(Auth::user()->role == 'user')
-                    <x-nav-link  class="text-gray-900">
+                    <x-nav-link  class="text-gray-900" :href="route('user.bayar')" :active="request()->routeIs('user.bayar')" >
                         {{ __('Pembayaran') }}
                     </x-nav-link>
 
@@ -105,7 +108,14 @@
                 {{ __('Data Mapel') }}
             </x-responsive-nav-link>
             @endif
+            @if(Auth::user()->role == 'user')
+                    <x-responsive-nav-link  class="text-gray-900" :href="route('user.bayar')" :active="request()->routeIs('user.bayar')" >
+                        {{ __('Pembayaran') }}
+                    </x-responsive-nav-link>
+
+                    @endif
         </div>
+
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">

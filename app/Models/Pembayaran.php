@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Pembayaran extends Model
 {
     use HasFactory;
-    protected $fillable = ['siswa_id', 'jenis', 'jumlah', 'status'];
+    protected $table = 'pembayarans';
+    protected $fillable = ['siswa_id', 'jenis', 'jumlah', 'bukti', 'status'];
 
     public function siswa()
     {

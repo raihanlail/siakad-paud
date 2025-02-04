@@ -11,7 +11,7 @@ class GuruController extends Controller
 {
     public function index()
     {
-        $gurus = Guru::with('mapel')->get();
+        $gurus = Guru::with('mapel')->latest()->paginate(10);
         $mapel = MataPelajaran::all();
         return view('admin.guru', compact('gurus', 'mapel'));
     }

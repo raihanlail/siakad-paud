@@ -4,8 +4,10 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
+use App\Http\Controllers\user\BayarController;
 use App\Http\Controllers\user\DaftarSiswaController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
@@ -47,7 +49,11 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function() {
     Route::post('/admin/mapel', action:[MapelController::class, 'store'])->name('admin.mapel.store');
     Route::get('admin/nilai/', [NilaiController::class, 'index'])->name('admin.nilai');
     Route::post('admin/nilai/', [NilaiController::class, 'store'])->name('admin.nilai.store');
+    Route::put('/admin/nilai/{id}', [NilaiController::class, 'update'])->name('admin.nilai.update');
     Route::get('/admin/nilai/{mata_pelajaran_id}', [NilaiController::class, 'showByMataPelajaran'])->name('admin.nilai.perMapel');
+    Route::get('/admin/pembayaran', [PembayaranController::class, 'index'])->name('admin.pembayaran');
+    Route::put('/admin/pembayaran/{id}', [PembayaranController::class, 'update'])->name('admin.pembayaran.update');
+
     
     
 
@@ -60,6 +66,8 @@ Route::middleware(['auth', 'userMiddleware'])->group(function() {
     Route::get('/user/daftar', [DaftarSiswaController::class, 'index'])->name('user.daftar');
     
     Route::post('/user/daftar', [DaftarSiswaController::class, 'store'])->name('user.daftar.store');
+    Route::get('/user/bayar', [BayarController::class, 'index'])->name('user.bayar');
+    Route::post('/user/bayar', [BayarController::class, 'store'])->name('user.bayar.store');
     
 
 });
