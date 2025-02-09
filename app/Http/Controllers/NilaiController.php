@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\MataPelajaran;
 use App\Models\Nilai;
 use App\Models\Siswa;
+use Barryvdh\DomPDF\Facade\Pdf;
+
 
 use Illuminate\Http\Request;
 
@@ -37,6 +39,17 @@ class NilaiController extends Controller
 
     return view('admin.nilai.per-mapel', compact('mataPelajaran', 'nilai', 'siswa'));
 }
+
+    public function exportPDF($mata_pelajaran_id)
+    {
+        $mataPelajaran = MataPelajaran::findOrFail($mata_pelajaran_id);
+        $nilai = Nilai::with('siswa')
+                      ->where('mata_pelajaran_id', $mata_pelajaran_id)
+                      ->get();
+                      $pdf = Pdf::loadView('admin.pdf.export-nilai', compact('mataPelajaran', 'nilai'));
+                     
+                      return $pdf->download('nilai-' . $mataPelajaran->nama . '.pdf');
+    }
 
     // Simpan nilai ke database
     public function store(Request $request)

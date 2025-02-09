@@ -37,7 +37,7 @@ class BayarController extends Controller
 
             if($request->hasFile('bukti')) {
                 $image = $request->file('bukti');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $imageName = Auth::user()->name . '_' . time() . '.' . $image->getClientOriginalExtension();
                 $image->move(public_path('bukti'), $imageName);
                 $request->merge(['bukti' => $imageName]);
             } else {

@@ -9,15 +9,16 @@
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
+        <link rel="stylesheet" href="resources/css/app.css">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0" style="background-image: url('/BG.jpg'); background-size: cover; background-position: center; backdrop-filter: blur(8px);">
+        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-style" style="background-image: url('/BG.jpg'); background-size: cover; background-position: center; backdrop-filter: blur(8px);">
             <div>
-                <a href="/" class="text-white font-semibold text-xl">
+                <a href="/" class="text-white font-extrabold text-2xl">
                    <h1>Selamat Datang di SIAKAD RA ALIFIA!</h1>
                 </a>
             </div>

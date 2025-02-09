@@ -17,6 +17,9 @@
                         >
                          {{ __('Tambah Nilai Siswa') }}
                         </x-primary-button>
+                        <x-secondary-button onclick="window.location.href='{{route('admin.nilai.download', $mataPelajaran->id)}}'">
+                            {{ __('Download Data Nilai') }}
+                        </x-secondary-button>
                         
                         <a href="{{route('admin.mapel')}}">
                             <x-secondary-button>

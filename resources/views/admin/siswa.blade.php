@@ -11,10 +11,17 @@
                 <div class="p-6 text-gray-900">
 
                     <!-- Tombol Tambah Siswa -->
-                    <x-primary-button x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'tambahSiswaModal')">
-                        {{ __('Tambah Siswa') }}
-                    </x-primary-button>
+                    <div class="flex flex-row gap-6">
+
+                        <x-primary-button x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'tambahSiswaModal')">
+                            {{ __('Tambah Siswa') }}
+                        </x-primary-button>
+    
+                        <x-secondary-button onclick="window.location.href='{{route('admin.siswa.download')}}'">
+                            {{ __('Download Data Siswa') }}
+                        </x-secondary-button>
+                    </div>
 
                     <!-- Tabel Data Siswa -->
                     <div class="relative overflow-x-auto pt-4">
@@ -24,6 +31,7 @@
                                     <th scope="col" class="px-6 py-3">No</th>
                                     <th scope="col" class="px-6 py-3">Nama</th>
                                     <th scope="col" class="px-6 py-3">NIS</th>
+                                    <th scope="col" class="px-6 py-3">Jenis Kelamin</th>
                                     <th scope="col" class="px-6 py-3">Alamat</th>
                                     <th scope="col" class="px-6 py-3">Orang Tua</th>
                                     <th scope="col" class="px-6 py-3">Status Pembayaran</th>
@@ -36,6 +44,7 @@
                                         <td class="px-6 py-4">{{ $index + 1}}</td>
                                         <td class="px-6 py-4">{{ $g->nama }}</td>
                                         <td class="px-6 py-4">{{ $g->nis }}</td>
+                                        <td class="px-6 py-4">{{ $g->jenis_kelamin }}</td>
                                         <td class="px-6 py-4">{{ $g->alamat }}</td>
                                         <td class="px-6 py-4">{{ $g->orangTua->name ?? '-' }}</td>
                                         <td class="px-6 py-4">{{ $g->bayar->status ?? 'belum ada data' }}</td>
@@ -48,6 +57,7 @@
                                                         nama: '{{ $g->nama }}',
                                                         nis: '{{ $g->nis }}',
                                                         alamat: '{{ $g->alamat }}',
+                                                        jenis_kelamin: '{{ $g->jenis_kelamin }}',
                                                         tanggal_lahir: '{{ $g->tanggal_lahir }}',
                                                         orang_tua_id: '{{ $g->orang_tua_id }}'
                                                     })
@@ -115,6 +125,15 @@
                             <x-input-label for="nis" value="{{ __('NIS') }}" />
                             <x-text-input id="nis" name="nis" type="text" class="mt-1 block w-full"
                                 placeholder="{{ __('Masukkan NIS') }}" required />
+                        </div>
+                        <!-- Input Jenis Kelamin -->
+                        <div>
+                            <x-input-label for="jenis_kelamin" value="{{ __('Jenis Kelamin') }}" />
+                            <select name="jenis_kelamin" id="jenis_kelamin"
+                            class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                            <option value="Laki-laki">Laki-laki</option>
+                            <option value="Perempuan">Perempuan</option>
+                            </select>
                         </div>
 
                         <div>
@@ -194,6 +213,19 @@
                             <x-input-label for="edit_nis" value="{{ __('NIS') }}" />
                             <x-text-input id="edit_nis" name="nis" type="text" class="mt-1 block w-full"
                                 x-bind:value="siswaData.nis" required />
+                        </div>
+                        <div>
+                            <x-input-label for="edit_jenis_kelamin" value="{{ __('Jenis Kelamin') }}" />
+                            <select name="jenis_kelamin" id="edit_jenis_kelamin" required
+                            class="mt-1 p-2.5 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
+                            <option value="">Pilih Jenis Kelamin</option>
+                            <option value="Laki-laki" x-bind:selected="siswaData.jenis_kelamin === 'Laki-laki'">
+                                Laki-laki</option>
+                            <option value="Perempuan" x-bind:selected="siswaData.jenis_kelamin === 'Perempuan'">
+                                Perempuan</option>
+                                
+                            </select>
+
                         </div>
 
                         <div>

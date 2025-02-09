@@ -98,6 +98,7 @@
                                 class="mt-1 p-2.5 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                                 x-bind:value="bayarData.status">
                                 <option value="Belum">Belum</option>
+                                <option value="Pendaftaran Sudah, SPP belum">Pendaftaran Sudah, SPP belum</option>
                                 <option value="Lunas">Lunas</option>
                             </select>
                         </div>

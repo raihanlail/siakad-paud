@@ -27,6 +27,7 @@ class DaftarSiswaController extends Controller
                 'nama' => $request->nama,
                 'nis' => $request->nis,
                 'alamat' => $request->alamat,
+                'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'orang_tua_id' => $request->orang_tua_id,
             ]);
