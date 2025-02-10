@@ -15,7 +15,7 @@
                                 <th scope="col" class="px-6 py-3">Nama</th>
                                 <th scope="col" class="px-6 py-3">Jenis</th>
                                 <th scope="col" class="px-6 py-3">Status</th>
-                                <th scope="col" class="px-6 py-3">Bukti</th>
+                                
                                 <th scope="col" class="px-6 py-3">Aksi</th>
                             </tr>
                         </thead>
@@ -26,9 +26,7 @@
                                     <td class="px-6 py-4">{{ $g->siswa->nama ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $g->jenis ?? '-' }}</td>
                                     <td class="px-6 py-4">{{ $g->status }}</td>
-                                    <td class="px-6 py-4">
-                                        <img src="{{ Storage::url('bukti/' . $g->bukti) }}" class="w-20 h-20 object-cover rounded" />
-                                        </td>
+                                   
                                     <td class="px-6 py-4 flex flex-row gap-4 ">
                                        <x-secondary-button x-data=""
                                        x-on:click.prevent="$dispatch('open-modal', 'editPembayaranModal')"
