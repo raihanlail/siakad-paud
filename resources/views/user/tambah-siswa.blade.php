@@ -49,7 +49,7 @@
                                 <x-input-error class="mt-2" :messages="$errors->get('nis')" />
                             </div>
 
-                            
+
                             <script>
                                 function generateNIS() {
                                     const randomNIS = Math.floor(100000 + Math.random() * 900000);
@@ -57,14 +57,14 @@
                                 }
                             </script>
 
-<div>
-    <x-input-label for="jenis_kelamin" value="{{ __('Jenis Kelamin') }}" />
-    <select name="jenis_kelamin" id="jenis_kelamin"
-    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
-    <option value="Laki-laki">Laki-laki</option>
-    <option value="Perempuan">Perempuan</option>
-    </select>
-</div>
+                            <div>
+                                <x-input-label for="jenis_kelamin" value="{{ __('Jenis Kelamin') }}" />
+                                <select name="jenis_kelamin" id="jenis_kelamin"
+                                    class="mt-1 block w-full border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm">
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
 
                             <div>
                                 <x-input-label for="alamat" :value="__('Alamat')" />

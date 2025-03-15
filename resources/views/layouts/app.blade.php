@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'SIAKAD RA ALIFIA') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -32,24 +32,6 @@
                 {{ $slot }}
             </main>
         </div>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                const openModalButton = document.querySelector("[data-modal-toggle='tambahSiswaModal']");
-                const closeModalButton = document.querySelector("[data-modal-hide='tambahSiswaModal']");
-                const modal = document.getElementById("tambahSiswaModal");
         
-                if (openModalButton) {
-                    openModalButton.addEventListener("click", function () {
-                        modal.classList.remove("hidden");
-                    });
-                }
-        
-                if (closeModalButton) {
-                    closeModalButton.addEventListener("click", function () {
-                        modal.classList.add("hidden");
-                    });
-                }
-            });
-        </script>
     </body>
 </html>

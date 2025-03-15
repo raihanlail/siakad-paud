@@ -21,6 +21,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'role',
+        'mata_pelajaran_id',
     ];
 
     /**
@@ -50,4 +52,5 @@ class User extends Authenticatable
     {
         return $this->hasMany(Siswa::class, 'orang_tua_id');
     }
+   
 }

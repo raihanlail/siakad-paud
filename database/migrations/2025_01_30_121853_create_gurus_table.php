@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nip')->unique();
             $table->text('alamat');
             $table->string('no_telp');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('mata_pelajaran_id')->constrained('mapels')->onDelete('cascade');
             $table->timestamps();
         });

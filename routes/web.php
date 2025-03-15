@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\guru\GuruDashboardController;
 use App\Http\Controllers\GuruController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
@@ -13,6 +14,7 @@ use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\UserMiddleware;
+use App\Models\Pembayaran;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -26,6 +28,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::middleware(['auth', 'guruMiddleware'])->group(function() {
+    Route::get('/guru/dashboard',[GuruDashboardController::class, 'index'])->name('guru.dashboard');
+    Route::post('/guru/dashboard',[GuruDashboardController::class, 'store'])->name('guru.dashboard.store');
+    Route::put('/guru/dashboard/{id}', [GuruDashboardController::class, 'update'])->name('guru.dashboard.update');
+});
+   
 
 
 require __DIR__.'/auth.php';
