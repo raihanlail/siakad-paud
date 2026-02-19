@@ -14,7 +14,7 @@ class SiswaController extends Controller
     public function index()
     {
         $siswa = Siswa::with('orangTua')->latest()->paginate(7);
-        $orangTua = User::all();
+        $orangTua = User::where('role', 'user')->get();
         return view('admin.siswa', compact('siswa', 'orangTua'));
     }
 
