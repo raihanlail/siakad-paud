@@ -1,139 +1,118 @@
-<nav x-data="{ open: false }" class="bg-gradient-to-r from-blue-400 to-blue-600 border-b border-gray-100 shadow-lg">
-    <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
-            <div class="flex">
-                <!-- Logo -->
-                <div class="shrink-0 flex items-center">
-                    <a href="{{ Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard') }}" class="transition-transform hover:scale-105">
-                        <x-application-logo class="block h-10 w-auto fill-current text-white" />
-                    </a>
-                </div>
+<div x-show="sidebarOpen" 
+     x-cloak
+     @click="sidebarOpen = false" 
+     x-transition:enter="transition-opacity ease-linear duration-300"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition-opacity ease-linear duration-300"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 z-40 lg:hidden bg-slate-900/60 backdrop-blur-sm">
+</div>
 
-                <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    <x-nav-link :href="Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Dashboard') }}
-                    </x-nav-link>
-
-                    @if(Auth::user()->role == 'admin') 
-                    <x-nav-link :href="route('admin.siswa')" :active="request()->routeIs('admin.siswa')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Data Siswa') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.guru')" :active="request()->routeIs('admin.guru')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Data Guru') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.mapel')" :active="request()->routeIs('admin.mapel')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Data Mapel') }}
-                    </x-nav-link>
-                    <x-nav-link :href="route('admin.pembayaran')" :active="request()->routeIs('admin.pembayaran')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Data Pembayaran') }}
-                    </x-nav-link>
-                    @endif
-
-                    @if(Auth::user()->role == 'user')
-                    <x-nav-link :href="route('user.bayar')" :active="request()->routeIs('user.bayar')" class="text-white hover:text-blue-200 transition-colors duration-200">
-                        {{ __('Pembayaran') }}
-                    </x-nav-link>
-                    @endif
-                </div>
+<aside 
+    :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" 
+    class="fixed inset-y-0 left-0 z-50 w-72 bg-indigo-800 text-white transition-transform duration-300 transform lg:translate-x-0 lg:static lg:inset-0 shadow-2xl flex flex-col h-screen overflow-hidden">
+    
+    <div class="flex items-center justify-between px-6 h-20 bg-indigo-900/50 border-b border-indigo-700/50 flex-shrink-0">
+        <a href="{{ Auth::user()->role == 'admin' ? route('admin.dashboard') : route('dashboard') }}" class="flex items-center space-x-3 group">
+            <div class="p-2 bg-white/10 rounded-lg group-hover:bg-white/20 transition">
+                <x-application-logo class="h-7 w-auto fill-current text-indigo-200" />
             </div>
-
-            <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
-                <x-dropdown align="right" width="48">
-                    <x-slot name="trigger">
-                        <button class="inline-flex items-center px-4 py-2 border border-transparent text-sm leading-4 font-medium rounded-lg text-white hover:bg-blue-500 focus:outline-none transition ease-in-out duration-150">
-                            <div>{{ Auth::user()->name }}</div>
-                            <div class="ms-2">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                            </div>
-                        </button>
-                    </x-slot>
-
-                    <x-slot name="content">
-                        <x-dropdown-link :href="route('profile.edit')" class="hover:bg-blue-50">
-                            {{ __('Profile') }}
-                        </x-dropdown-link>
-
-                        <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();"
-                                    class="hover:bg-blue-50">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
-                    </x-slot>
-                </x-dropdown>
+            <div class="flex flex-col">
+                <span class="font-black text-lg leading-none tracking-tight">SI ALIFIA</span>
+                <span class="text-[10px] text-indigo-300 uppercase font-black tracking-[0.2em] mt-1">Akademik</span>
             </div>
-
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-white hover:text-blue-200 hover:bg-blue-500 focus:outline-none transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
+        </a>
+        
+        <button @click="sidebarOpen = false" class="lg:hidden p-2 rounded-md text-indigo-200 hover:text-white hover:bg-white/10 transition">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
     </div>
 
-    <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')" class="text-white hover:bg-blue-500">
-                {{ __('Dashboard') }}
-            </x-responsive-nav-link>
-            @if(Auth::user()->role == 'admin')
-            <x-responsive-nav-link :href="route('admin.siswa')" :active="request()->routeIs('admin.siswa')" class="text-white hover:bg-blue-500">
+    <nav class="flex-1 px-4 py-6 space-y-1 overflow-y-auto custom-scrollbar">
+        @php
+            $role = Auth::user()->role;
+            $dashRoute = ($role == 'admin') ? route('admin.dashboard') : route('dashboard');
+        @endphp
+
+        <x-sidebar-link :href="$dashRoute" :active="request()->routeIs('dashboard') || request()->routeIs('admin.dashboard')" icon="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+            {{ __('Dashboard') }}
+        </x-sidebar-link>
+
+        @if($role == 'admin')
+            <div class="pt-6 pb-2 px-4 text-[10px] font-black text-indigo-400/80 uppercase tracking-[0.25em]">
+                {{ __('Master Data') }}
+            </div>
+            
+            <x-sidebar-link :href="route('admin.siswa')" :active="request()->routeIs('admin.siswa')" icon="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
                 {{ __('Data Siswa') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.guru')" :active="request()->routeIs('admin.guru')" class="text-white hover:bg-blue-500">
+            </x-sidebar-link>
+
+            <x-sidebar-link :href="route('admin.guru')" :active="request()->routeIs('admin.guru')" icon="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
                 {{ __('Data Guru') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.mapel')" :active="request()->routeIs('admin.mapel')" class="text-white hover:bg-blue-500">
-                {{ __('Data Mapel') }}
-            </x-responsive-nav-link>
-            <x-responsive-nav-link :href="route('admin.pembayaran')" :active="request()->routeIs('admin.pembayaran')" class="text-white hover:bg-blue-500">
-                {{ __('Data Pembayaran') }}
-            </x-responsive-nav-link>
-            @endif
-            @if(Auth::user()->role == 'user')
-            <x-responsive-nav-link :href="route('user.bayar')" :active="request()->routeIs('user.bayar')" class="text-white hover:bg-blue-500">
-                {{ __('Pembayaran') }}
-            </x-responsive-nav-link>
-            @endif
+            </x-sidebar-link>
+
+            <x-sidebar-link :href="route('admin.mapel')" :active="request()->routeIs('admin.mapel')" icon="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253">
+                {{ __('Mata Pelajaran') }}
+            </x-sidebar-link>
+
+            <div class="pt-6 pb-2 px-4 text-[10px] font-black text-indigo-400/80 uppercase tracking-[0.25em]">
+                {{ __('Administrasi') }}
+            </div>
+            
+            <x-sidebar-link :href="route('admin.pembayaran')" :active="request()->routeIs('admin.pembayaran')" icon="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z">
+                {{ __('Laporan Bayar') }}
+            </x-sidebar-link>
+        @endif
+
+        @if($role == 'user')
+            <div class="pt-6 pb-2 px-4 text-[10px] font-black text-indigo-400/80 uppercase tracking-[0.25em]">
+                {{ __('Wali Murid') }}
+            </div>
+            
+            <x-sidebar-link :href="route('user.bayar')" :active="request()->routeIs('user.bayar')" icon="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                {{ __('Bayar SPP') }}
+            </x-sidebar-link>
+        @endif
+    </nav>
+
+    <div class="p-4 bg-indigo-900/40 border-t border-indigo-700/50 flex-shrink-0">
+        <div class="flex items-center space-x-3 mb-4 px-2">
+            <div class="flex-shrink-0 relative group">
+                <img class="h-11 w-11 rounded-xl object-cover border-2 border-indigo-500/50 group-hover:border-white/50 transition duration-300" 
+                     src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name) }}&background=6366f1&color=fff&bold=true" 
+                     alt="{{ Auth::user()->name }}">
+                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-indigo-900 rounded-full"></div>
+            </div>
+            <div class="overflow-hidden">
+                <p class="text-sm font-bold truncate leading-none text-white">{{ Auth::user()->name }}</p>
+                <p class="text-[10px] text-indigo-300 uppercase font-black tracking-tighter mt-1.5 flex items-center">
+                    <span class="bg-indigo-700/50 px-1.5 py-0.5 rounded">{{ Auth::user()->role }}</span>
+                </p>
+            </div>
         </div>
 
-        <!-- Responsive Settings Options -->
-        <div class="pt-4 pb-1 border-t border-blue-300">
-            <div class="px-4">
-                <div class="font-medium text-base text-white">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-blue-200">{{ Auth::user()->email }}</div>
-            </div>
-
-            <div class="mt-3 space-y-1">
-                <x-responsive-nav-link :href="route('profile.edit')" class="text-white hover:bg-blue-500">
-                    {{ __('Profile') }}
-                </x-responsive-nav-link>
-
-                <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();"
-                            class="text-white hover:bg-blue-500">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
-            </div>
+        <div class="grid grid-cols-2 gap-2">
+            <a href="{{ route('profile.edit') }}" class="flex items-center justify-center py-2.5 bg-indigo-700 hover:bg-indigo-600 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all">
+                {{ __('Profil') }}
+            </a>
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit" class="w-full flex items-center justify-center py-2.5 bg-rose-600 hover:bg-rose-500 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all text-white shadow-lg shadow-rose-900/20">
+                    {{ __('Keluar') }}
+                </button>
+            </form>
         </div>
     </div>
-</nav>
+</aside>
+
+<style>
+    /* Custom Thin Scrollbar for Sidebar */
+    .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(165, 180, 252, 0.2); border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(165, 180, 252, 0.4); }
+</style>

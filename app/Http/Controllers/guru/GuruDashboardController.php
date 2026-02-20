@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\MataPelajaran;
 use App\Models\Guru;
 use App\Models\User;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Nilai;
 
 use Illuminate\Http\Request;
@@ -63,6 +63,27 @@ class GuruDashboardController extends Controller
         ]);
         return redirect()->back()->with('success', 'Nilai berhasil diperbarui.');
     }
+
+   public function exportPDF()
+{
+    $user = Auth::user();
+    $guru = Guru::where('user_id', $user->id)->first();
+    // Use first() to get the object directly
+    $mapel = MataPelajaran::findOrFail($guru->mata_pelajaran_id);
+
+    $nilai = Nilai::with(['siswa', 'mataPelajaran'])
+                ->where('mata_pelajaran_id', $mapel->id)
+                ->get();
+
+    $pdf = Pdf::loadView('guru.pdf.export-nilai', [
+        'nilai' => $nilai,
+        'guru' => $guru,
+        'mapel' => $mapel,
+        'date' => now()->format('d F Y')
+    ]);
+
+    return $pdf->download('Data-Nilai-' . $mapel->nama . '.pdf');
+}
 
 
 }

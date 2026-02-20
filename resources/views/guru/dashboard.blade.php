@@ -1,235 +1,211 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="font-bold text-2xl text-slate-800 leading-tight">
             {{ __('Dashboard Guru') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-           
-            <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-                <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <div class="py-4 text-gray-900 mb-4 sm:mb-0">
-                        <span class="text-xl font-semibold">{{ __("Halo!") }}</span>
-                        <span class="text-lg text-blue-600">{{$user->name}}</span>
-                    </div>
-                    <div class="bg-gray-100 px-4 py-2 rounded-md">
-                        <span class="text-sm text-gray-600">NIP:</span>
-                        <span class="font-medium">{{$guru->nip}}</span>
-                    </div>
+    <div class="space-y-6">
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-slate-200 p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute -right-4 -bottom-4 text-blue-50 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                    <svg class="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
                 </div>
-                <div class="mt-4 gap-4 p-4 bg-blue-50 rounded-md flex flex-col sm:flex-row justify-between">
-                   <p>
-                    <span class="text-blue-700">Berikut adalah nilai dari pelajaran</span>
-                    <span class="font-semibold text-blue-800">{{$mapel[0]->nama}}</span>
-                    
-                </p> 
-                <div>
-                    <x-primary-button 
-                    x-data=""
-                     x-on:click.prevent="$dispatch('open-modal', 'tambahNilaiModal')"
-                    >
-                     {{ __('Tambah Nilai Siswa') }}
-                    </x-primary-button>
-                </div>
+
+                <div class="relative z-10">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h3 class="text-slate-500 text-sm font-bold uppercase tracking-widest">{{ __("Selamat Datang") }}</h3>
+                            <p class="text-2xl font-extrabold text-slate-800 mt-1">
+                                {{ $user->name }}
+                            </p>
+                        </div>
+                        <div class="bg-blue-50 border border-blue-100 px-4 py-2 rounded-xl text-right">
+                            <span class="block text-[10px] font-bold text-blue-400 uppercase tracking-tighter">NIP Guru</span>
+                            <span class="text-blue-700 font-mono font-bold">{{ $guru->nip }}</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-8 flex items-center p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <div class="p-3 bg-blue-600 rounded-lg text-white mr-4 shadow-md shadow-blue-200">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <div>
+                            <p class="text-sm text-slate-600">Mata Pelajaran Aktif:</p>
+                            <p class="font-bold text-slate-800">{{ $mapel[0]->nama }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <table class="w-full text-sm text-left rtl:text-right text-gray-500">
-                    <thead class="text-xs text-white uppercase bg-blue-600">
-                        <tr>
-                            <th scope="col" class="px-6 py-4">No</th>
-                            <th scope="col" class="px-6 py-4">Nama</th>
-                            <th scope="col" class="px-6 py-4">Mata Pelajaran</th>
-                            <th scope="col" class="px-6 py-4">Nilai</th>
-                            <th scope="col" class="px-6 py-4">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @forelse ($nilai as $index => $g)
-                            <tr class="bg-white hover:bg-gray-50 transition-colors duration-200">
-                                <td class="px-6 py-4 font-medium">{{ $index + 1 }}</td>
-                                <td class="px-6 py-4">{{ $g->siswa->nama ?? '-' }}</td>
-                                <td class="px-6 py-4">{{ $g->mataPelajaran->nama ?? '-' }}</td>
-                                <td class="px-6 py-4">
-                                    <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full">
-                                        {{ $g->nilai}}
-                                    </span>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <x-secondary-button x-data=""
-                                    x-on:click.prevent="$dispatch('open-modal', 'editNilaiModal')"
-                                    @click="
-                                    $dispatch('set-nilai-data', {
-                                        id: '{{ $g->id }}',
-                                        nama: '{{ $g->siswa->nama }}',
-                                        siswa_id: '{{ $g->siswa->id }}',
-                                        mapel: '{{ $g->mataPelajaran->nama }}',
-                                        mapel_id: '{{ $g->mataPelajaran->id }}',
-                                        nilai: '{{ $g->nilai }}'
-                                    })
-                                ">
-                                     {{ __('Edit') }}
-                                    </x-secondary-button>
-                                </td>
-                            </tr>
-                        @empty                            <tr class="bg-white">
-                                <td colspan="6" class="px-6 py-8 text-center text-gray-500">
-                                    <div class="flex flex-col items-center">
-                                        <svg class="w-12 h-12 text-gray-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        <span class="font-medium">Tidak ada data nilai siswa</span>
-                                    </div>
-                                </td>
-                            </tr>
-                        @endforelse
-                    </tbody>
-                </table>
+            <div class="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl shadow-lg shadow-blue-200 p-6 text-white flex flex-col justify-center items-center text-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-md">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                </div>
+                <h4 class="font-bold text-lg leading-tight mb-2">Manajemen Nilai</h4>
+                <p class="text-blue-100 text-xs mb-6 px-4 text-balance">Input nilai siswa terbaru untuk mata pelajaran {{ $mapel[0]->nama }} secara instan.</p>
+                
+                <button 
+                    x-data=""
+                    x-on:click.prevent="$dispatch('open-modal', 'tambahNilaiModal')"
+                    class="w-full py-3 bg-white text-blue-700 rounded-xl font-bold text-sm shadow-sm hover:bg-blue-50 transition active:scale-95"
+                >
+                    {{ __('Tambah Nilai Siswa') }}
+                </button>
             </div>
+        </div>
+
+       <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+    <div class="px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-center bg-slate-50/30 gap-4">
+        <div>
+            <h3 class="font-bold text-slate-800 text-base">{{ __('Daftar Nilai Siswa') }}</h3>
+            <p class="text-xs text-slate-500 font-medium">Pengelolaan nilai akademik siswa per mata pelajaran</p>
+        </div>
+
+        <div class="flex items-center gap-3">
+            <div class="hidden md:flex flex-col items-end mr-2">
+                <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Populasi Data</span>
+                <span class="text-blue-600 font-bold text-sm">{{ count($nilai) }} Siswa</span>
+            </div>
+
+            <a href="{{ route('guru.download') }}" class="group">
+                <x-secondary-button class="rounded-xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-2.5 shadow-sm transition-all group-hover:border-blue-300 group-hover:text-blue-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                    </svg>
+                    {{ __('Unduh PDF') }}
+                </x-secondary-button>
+            </a>
         </div>
     </div>
+    
+    <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+            <thead>
+                <tr class="bg-slate-50/50">
+                    <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">No</th>
+                    <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Informasi Siswa</th>
+                    <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center">Nilai</th>
+                    <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center">Status</th>
+                    <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-right">Opsi</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+                @forelse ($nilai as $index => $g)
+                    <tr class="hover:bg-blue-50/30 transition-colors group">
+                        <td class="px-8 py-5">
+                            <span class="text-slate-400 font-mono text-xs">{{ sprintf('%02d', $index + 1) }}</span>
+                        </td>
+                        <td class="px-8 py-5">
+                            <div class="font-bold text-slate-700 leading-tight">{{ $g->siswa->nama ?? '-' }}</div>
+                            <div class="flex items-center mt-1">
+                                <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-bold uppercase mr-2">NIS: {{ $g->siswa->nis }}</span>
+                                <span class="text-[10px] text-blue-500 font-bold uppercase tracking-tighter">{{ $g->mataPelajaran->nama ?? '-' }}</span>
+                            </div>
+                        </td>
+                        <td class="px-8 py-5 text-center">
+                            <span class="text-base font-black {{ $g->nilai >= 75 ? 'text-blue-600' : 'text-rose-500' }}">
+                                {{ $g->nilai }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-5 text-center">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-wider
+                                {{ $g->nilai >= 75 ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-rose-50 text-rose-600 border border-rose-100' }}">
+                                {{ $g->nilai >= 75 ? 'Tuntas' : 'Remedial' }}
+                            </span>
+                        </td>
+                        <td class="px-8 py-5 text-right">
+                            <button 
+                                x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'editNilaiModal')"
+                                @click="$dispatch('set-nilai-data', {
+                                    id: '{{ $g->id }}',
+                                    nama: '{{ $g->siswa->nama }}',
+                                    siswa_id: '{{ $g->siswa->id }}',
+                                    mapel: '{{ $g->mataPelajaran->nama }}',
+                                    mapel_id: '{{ $g->mataPelajaran->id }}',
+                                    nilai: '{{ $g->nilai }}'
+                                })"
+                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-white border border-slate-200 text-slate-400 hover:text-blue-600 hover:border-blue-200 hover:shadow-sm transition-all shadow-none"
+                                title="Edit Nilai"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            </button>
+                        </td>
+                    </tr>
+                @empty
+                    <tr>
+                        <td colspan="5" class="px-8 py-20 text-center">
+                            <div class="flex flex-col items-center">
+                                <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
+                                    <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                                </div>
+                                <p class="font-bold text-slate-400 uppercase tracking-widest text-[10px]">{{ __('Belum Ada Data Nilai Masuk') }}</p>
+                            </div>
+                        </td>
+                    </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+</div>
+    </div>
+
     <x-modal name="tambahNilaiModal" focusable>
-        <div class="relative w-full max-w-2xl max-h-full">
-            <div class="relative bg-white rounded-lg shadow-xl">
-                <!-- Modal Header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t">
-                    <h3 class="text-xl font-semibold text-gray-900">
-                        Tambah Nilai Siswa
-                    </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center" x-on:click="$dispatch('close')">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+        <div class="p-8">
+            <h3 class="text-xl font-bold text-slate-800 mb-6">{{ __('Tambah Nilai Siswa') }}</h3>
+            <form action="{{ route('guru.dashboard.store') }}" method="POST" class="space-y-5">
+                @csrf
+                <div>
+                    <x-input-label for="siswa_id" value="{{ __('Nama Siswa') }}" class="font-bold text-xs uppercase text-slate-500" />
+                    <select name="siswa_id" id="siswa_id" required class="mt-1 block w-full rounded-xl border-slate-200 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                        <option value="">{{ __('Pilih Siswa...') }}</option>
+                        @foreach ($siswa as $s)
+                            <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                        @endforeach
+                    </select>
                 </div>
-
-                <!-- Modal Body -->
-                <div class="p-6">
-                    <form action="{{ route('guru.dashboard.store') }}" method="POST" class="w-full space-y-4">
-                        @csrf
-                        <!-- Input Nama -->
-                        <div>
-                            <x-input-label for="siswa_id" value="{{ __('Nama Siswa') }}" />
-                            <select name="siswa_id" id="siswa_id" required
-                                class="mt-1 p-2.5 w-full border rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200">
-                                <option value="">Pilih Siswa</option>
-                                @foreach ($siswa as $s)
-                                    <option value="{{ $s->id }}">{{ $s->nama }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <!-- Input Nilai -->
-                        <div>
-                            <x-input-label for="nilai" value="{{ __('Nilai') }}" />
-                            <x-text-input
-                                id="nilai"
-                                name="nilai"
-                                type="number"
-                                class="mt-1 block w-full"
-                                placeholder="{{ __('Masukkan Nilai') }}"
-                                required
-                            />
-                        </div>
-
-                        <div>
-                            <x-input-label for="mata_pelajaran_id" value="{{ __('Mata Pelajaran') }}" />
-                            <x-text-input
-                                id="mata_pelajaran_id"
-                                name="mata_pelajaran_id"
-                                type="hidden"
-                                value="{{ $mapel[0]->id }}"
-                            />
-                            <x-text-input
-                                type="text"
-                                class="mt-1 block w-full"
-                                value="{{ $mapel[0]->nama }}"
-                                readonly
-                            />
-                        </div>
-
-                        <!-- Tombol Simpan -->
-                        <div class="flex justify-end pt-4 border-t gap-2">
-                            <x-secondary-button type="button"
-                                x-on:click="$dispatch('close')"
-                            >{{ __('Batal') }}</x-secondary-button>
-                            <x-primary-button>
-                                {{ __('Simpan') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <x-input-label for="nilai" value="{{ __('Nilai') }}" class="font-bold text-xs uppercase text-slate-500" />
+                        <x-text-input id="nilai" name="nilai" type="number" class="mt-1 block w-full rounded-xl shadow-sm" placeholder="0-100" required />
+                    </div>
+                    <div>
+                        <x-input-label value="{{ __('Mata Pelajaran') }}" class="font-bold text-xs uppercase text-slate-500" />
+                        <input type="hidden" name="mata_pelajaran_id" value="{{ $mapel[0]->id }}">
+                        <x-text-input type="text" class="mt-1 block w-full bg-slate-50 rounded-xl text-slate-500 font-bold" value="{{ $mapel[0]->nama }}" readonly />
+                    </div>
                 </div>
-            </div>
+                <div class="flex justify-end space-x-3 pt-6 border-t border-slate-100">
+                    <x-secondary-button x-on:click="$dispatch('close')" class="rounded-xl border-none shadow-none uppercase font-bold text-xs tracking-widest">{{ __('Batal') }}</x-secondary-button>
+                    <x-primary-button class="rounded-xl bg-blue-600 hover:bg-blue-700 px-8 py-3 shadow-lg shadow-blue-200 uppercase font-bold text-xs tracking-widest">{{ __('Simpan') }}</x-primary-button>
+                </div>
+            </form>
         </div>
     </x-modal>
+
     <x-modal name="editNilaiModal" focusable>
-        <div class="relative w-full max-w-2xl max-h-full">
-            <div class="relative bg-white rounded-lg shadow-xl">
-                <!-- Modal Header -->
-                <div class="flex items-start justify-between p-4 border-b rounded-t">
-                    <h3 class="text-xl font-semibold text-gray-900">
-                        Edit Nilai Siswa
-                    </h3>
-                    <button type="button"
-                        class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center"
-                        x-on:click="$dispatch('close')">
-                        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
-                            viewBox="0 0 14 14">
-                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
-                        </svg>
-                        <span class="sr-only">Close modal</span>
-                    </button>
+        <div class="p-8">
+            <h3 class="text-xl font-bold text-slate-800 mb-6">{{ __('Edit Nilai Siswa') }}</h3>
+            <form x-data="{ nilaiData: {} }" @set-nilai-data.window="nilaiData = $event.detail" x-bind:action="'/guru/dashboard/' + nilaiData.id" method="POST" class="space-y-5">
+                @csrf @method('PUT')
+                <div>
+                    <x-input-label value="{{ __('Nama Siswa') }}" class="font-bold text-xs uppercase text-slate-500" />
+                    <x-text-input x-bind:value="nilaiData.nama" class="mt-1 block w-full bg-slate-50 text-slate-500 font-bold rounded-xl" readonly />
+                    <input type="hidden" name="siswa_id" x-bind:value="nilaiData.siswa_id">
                 </div>
-
-                <!-- Modal Body -->
-                <div class="p-6">
-                    <form x-data="{ nilaiData: {} }" @set-nilai-data.window="nilaiData = $event.detail"
-                        x-bind:action="'/guru/dashboard/' + nilaiData.id" method="POST" class="w-full space-y-4">
-                        @csrf
-                        @method('PUT')
-                        
-                        <div>
-                            
-                            <x-text-input id="nama" type="hidden" class="mt-1 block w-full"
-                                x-bind:value="nilaiData.nama" readonly />
-                        </div>
-                        <div>
-                            
-                            <x-text-input id="siswa_id" name="siswa_id" type="hidden" class="mt-1 block w-full"
-                                x-bind:value="nilaiData.siswa_id" />
-                        </div>
-
-                        <div>
-                            
-                            <x-text-input id="mapel" type="hidden" class="mt-1 block w-full"
-                                x-bind:value="nilaiData.mapel" readonly />
-                        </div>
-                        <div>
-                            
-                            <x-text-input id="mata_pelajaran_id" name="mata_pelajaran_id" type="hidden" class="mt-1 block w-full"
-                                x-bind:value="nilaiData.mapel_id" />
-                        </div>
-
-                        <div>
-                            <x-input-label for="nilai" value="{{ __('Nilai') }}" />
-                            <x-text-input id="nilai" name="nilai" type="number" class="mt-1 block w-full"
-                                x-bind:value="nilaiData.nilai" required />
-                        </div>
-
-                        <div class="flex justify-end pt-4 border-t gap-2">
-                            <x-secondary-button type="button"
-                                x-on:click="$dispatch('close')">{{ __('Batal') }}</x-secondary-button>
-                            <x-primary-button>
-                                {{ __('Simpan') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
+                <div>
+                    <x-input-label for="nilai_edit" value="{{ __('Update Nilai') }}" class="font-bold text-xs uppercase text-slate-500" />
+                    <x-text-input id="nilai_edit" name="nilai" type="number" x-bind:value="nilaiData.nilai" class="mt-1 block w-full rounded-xl" required />
                 </div>
-            </div>
+                <input type="hidden" name="mata_pelajaran_id" x-bind:value="nilaiData.mapel_id">
+                <div class="flex justify-end space-x-3 pt-6 border-t border-slate-100">
+                    <x-secondary-button x-on:click="$dispatch('close')" class="rounded-xl border-none uppercase font-bold text-xs tracking-widest">{{ __('Batal') }}</x-secondary-button>
+                    <x-primary-button class="rounded-xl bg-indigo-600 hover:bg-indigo-700 px-8 py-3 uppercase font-bold text-xs tracking-widest">{{ __('Update') }}</x-primary-button>
+                </div>
+            </form>
         </div>
     </x-modal>
 </x-app-layout>

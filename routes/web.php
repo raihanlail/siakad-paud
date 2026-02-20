@@ -31,6 +31,7 @@ Route::middleware('auth')->group(function () {
 Route::middleware(['auth', 'guruMiddleware'])->group(function() {
     Route::get('/guru/dashboard',[GuruDashboardController::class, 'index'])->name('guru.dashboard');
     Route::post('/guru/dashboard',[GuruDashboardController::class, 'store'])->name('guru.dashboard.store');
+     Route::get('/guru/download',[GuruDashboardController::class, 'exportPDF'])->name('guru.download');
     Route::put('/guru/dashboard/{id}', [GuruDashboardController::class, 'update'])->name('guru.dashboard.update');
 });
    

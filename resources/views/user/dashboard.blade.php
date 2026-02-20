@@ -1,131 +1,133 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-2xl text-gray-800 leading-tight tracking-wide">
-            {{ __('Selamat Datang di SIAKAD RA ALIFIA!') }}
+        <h2 class="font-bold text-2xl text-slate-800 leading-tight">
+            {{ __('Dashboard Orang Tua') }}
         </h2>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-          <!--  @if (session('success'))
-                <div class="bg-green-100 border border-green-400 text-green-800 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('success') }}</span>
+    <div class="space-y-6">
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="p-8 flex flex-col md:flex-row items-center justify-between bg-gradient-to-r from-white to-blue-50/50">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <h3 class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-1">{{ __("Selamat Datang di SIAKAD") }}</h3>
+                    <span class="text-3xl font-extrabold text-slate-800 tracking-tight">
+                        Halo, <span class="text-blue-600">{{ $user->name }}</span>!
+                    </span>
+                    <p class="text-slate-500 mt-2 text-lg font-medium">Pantau perkembangan akademik putra-putri Anda di sini.</p>
                 </div>
-            @endif
-
-            @if (session('error'))
-                <div class="bg-red-100 border border-red-400 text-red-800 px-4 py-3 rounded relative mb-4" role="alert">
-                    <span class="block sm:inline">{{ session('error') }}</span>
-                </div>
-            @endif -->
-
-            <div class="bg-white overflow-hidden shadow-lg rounded-xl mb-6 transform hover:scale-[1.01] transition-all duration-300">
-                <div class="p-8 flex flex-col sm:flex-row items-center justify-between">
-                    <div class="text-gray-900 mb-4 sm:mb-0 text-center sm:text-left">
-                        <span class="text-2xl font-bold">{{ __("Halo,") }} {{$user->name}}!</span>
-                        <p class="text-gray-600 mt-2 text-lg">Berikut adalah nilai anak-anak anda</p>
-                    </div>
-                    <div class="flex space-x-4">
-                        <a href="{{route('user.daftar')}}" class="transition duration-300 ease-in-out transform hover:scale-105">
-                            <x-primary-button class="px-6 py-3 text-base">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="hidden sm:block h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
-                                </svg>
-                                {{ __('Daftar Siswa') }}
-                            </x-primary-button>
-                        </a>
-                    </div>
-                </div>
+                
+                <a href="{{ route('user.daftar') }}" class="group">
+                    <x-primary-button class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl shadow-lg shadow-blue-200 transition-all group-hover:-translate-y-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+                        </svg>
+                        {{ __('Daftar Siswa Baru') }}
+                    </x-primary-button>
+                </a>
             </div>
+        </div>
 
-            @if ($siswa->isEmpty())
-                <div class="bg-white shadow-lg rounded-xl p-12 mb-4 text-center transform hover:scale-[1.01] transition-all duration-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 mx-auto text-gray-400 mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        @if ($siswa->isEmpty())
+            <div class="bg-white rounded-2xl border-2 border-dashed border-slate-200 p-16 text-center">
+                <div class="bg-slate-50 w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
-                    <p class="text-gray-500 text-xl font-medium">Tidak ada data siswa yang terdaftar.</p>
-                    <p class="text-gray-400 mt-4 text-lg">Silakan klik tombol Daftar Siswa di atas untuk mendaftarkan siswa baru.</p>
                 </div>
-            @else
+                <h4 class="text-xl font-bold text-slate-800">Belum Ada Siswa Terdaftar</h4>
+                <p class="text-slate-500 mt-2 max-w-sm mx-auto font-medium">Data nilai akan muncul setelah Anda mendaftarkan siswa dan diverifikasi oleh admin.</p>
+            </div>
+        @else
+            <div class="grid grid-cols-1 gap-8">
                 @foreach ($siswa as $item)
-                    <div class="bg-white shadow-lg rounded-xl p-8 mb-6 hover:shadow-xl transform hover:scale-[1.01] transition-all duration-300">
-                        <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
-                            <div class="mb-4 sm:mb-0 text-center sm:text-left">
-                                <h2 class="text-2xl sm:text-3xl font-bold text-gray-800 mb-2">{{ $item->nama }}</h2>
-                                <p class="text-lg text-gray-600">NIS: {{ $item->nis }}</p>
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden transition-all hover:shadow-md">
+                        <div class="px-8 py-6 border-b border-slate-100 flex flex-col lg:flex-row justify-between items-center gap-4 bg-slate-50/30">
+                            <div class="flex items-center">
+                                <div class="w-14 h-14 bg-indigo-100 rounded-2xl flex items-center justify-center text-indigo-600 mr-5 shadow-inner">
+                                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                </div>
+                                <div>
+                                    <h2 class="text-2xl font-bold text-slate-800 leading-tight">{{ $item->nama }}</h2>
+                                    <p class="text-sm font-bold text-slate-400 tracking-widest uppercase">NIS: {{ $item->nis }}</p>
+                                </div>
                             </div>
-                            
-                            <div class="flex flex-col sm:flex-row gap-4 items-center">
-                                <a href="{{route('user.download', $item->id)}}" class="transition duration-300 ease-in-out transform hover:scale-105">
-                                    <x-secondary-button class="px-6 py-3 text-base">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="hidden sm:block h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v3.586L7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V8z" clip-rule="evenodd" />
-                                        </svg>
-                                        {{ __('Download') }}
-                                    </x-secondary-button>
-                                </a>
-                           
-                                <div class="text-center sm:text-right">
-                                    <p class="text-base text-gray-600 mb-2">Status Pembayaran:</p>
-                                    <span class="px-6 py-2 rounded-full text-base font-semibold inline-block
+
+                            <div class="flex flex-wrap items-center justify-center gap-3">
+                                <div class="flex flex-col items-center lg:items-end mr-4">
+                                    <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter mb-1">Status Administrasi</span>
+                                    <span class="px-4 py-1.5 rounded-lg text-xs font-bold tracking-wide
                                         @if(($item->bayar->status ?? '') === 'Lunas') 
-                                            bg-green-100 text-green-800
+                                            bg-green-100 text-green-700 border border-green-200
                                         @elseif(($item->bayar->status ?? '') === 'Belum Lunas')
-                                            bg-yellow-100 text-yellow-800
+                                            bg-orange-100 text-orange-700 border border-orange-200
                                         @else
-                                            bg-gray-100 text-gray-800
+                                            bg-slate-100 text-slate-600 border border-slate-200
                                         @endif
                                     ">
-                                        {{$item->bayar->status ?? 'Belum ada data'}}
+                                        {{ strtoupper($item->bayar->status ?? 'Menunggu') }}
                                     </span>
                                 </div>
+
+                                <a href="{{ route('user.download', $item->id) }}">
+                                    <x-secondary-button class="rounded-xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                                        </svg>
+                                        {{ __('Unduh Raport') }}
+                                    </x-secondary-button>
+                                </a>
                             </div>
                         </div>
 
-                        @if ($item->nilai->isEmpty())
-                            <div class="text-center py-12">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto text-gray-400 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                </svg>
-                                <p class="text-gray-500 text-lg">Belum ada data nilai.</p>
-                            </div>
-                        @else
-                            <div class="overflow-x-auto">
-                                <table class="w-full border-collapse mt-4">
-                                    <thead>
-                                        <tr class="bg-gray-50">
-                                            <th class="border px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Mata Pelajaran</th>
-                                            <th class="border px-6 py-4 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Nilai</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-gray-200">
-                                        @foreach ($item->nilai as $nilai)
-                                            <tr class="hover:bg-gray-50 transition-colors duration-200">
-                                                <td class="border px-6 py-4 whitespace-nowrap text-base text-gray-900">{{ $nilai->mataPelajaran->nama }}</td>
-                                                <td class="border px-6 py-4 whitespace-nowrap text-base">
-                                                    <span class="px-4 py-2 rounded-full inline-block
-                                                        @if($nilai->nilai >= 90)
-                                                            bg-green-100 text-green-800
-                                                        @elseif($nilai->nilai >= 80)
-                                                            bg-blue-100 text-blue-800
-                                                        @elseif($nilai->nilai >= 70)
-                                                            bg-yellow-100 text-yellow-800
-                                                        @else
-                                                            bg-red-100 text-red-800
-                                                        @endif
-                                                    ">
-                                                        {{ $nilai->nilai }}
-                                                    </span>
-                                                </td>
+                        <div class="p-0">
+                            @if ($item->nilai->isEmpty())
+                                <div class="py-12 text-center">
+                                    <p class="text-slate-400 font-medium italic">Belum ada nilai yang diinput oleh guru.</p>
+                                </div>
+                            @else
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr class="bg-slate-50/50">
+                                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100">Mata Pelajaran</th>
+                                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center">Nilai Akhir</th>
+                                                <th class="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest border-b border-slate-100 text-center">Predikat</th>
                                             </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        @endif
+                                        </thead>
+                                        <tbody class="divide-y divide-slate-50">
+                                            @foreach ($item->nilai as $nilai)
+                                                <tr class="hover:bg-blue-50/30 transition-colors">
+                                                    <td class="px-8 py-5">
+                                                        <span class="text-slate-700 font-bold text-base">{{ $nilai->mataPelajaran->nama }}</span>
+                                                    </td>
+                                                    <td class="px-8 py-5 text-center">
+                                                        <span class="inline-block min-w-[3rem] px-3 py-1 font-mono font-bold text-lg {{ $nilai->nilai >= 75 ? 'text-blue-600' : 'text-rose-500' }}">
+                                                            {{ $nilai->nilai }}
+                                                        </span>
+                                                    </td>
+                                                    <td class="px-8 py-5 text-center">
+                                                        <span class="px-3 py-1 rounded-md text-xs font-black
+                                                            @if($nilai->nilai >= 90) bg-emerald-50 text-emerald-600 
+                                                            @elseif($nilai->nilai >= 80) bg-blue-50 text-blue-600
+                                                            @elseif($nilai->nilai >= 70) bg-amber-50 text-amber-600
+                                                            @else bg-rose-50 text-rose-600 @endif
+                                                        ">
+                                                            @if($nilai->nilai >= 90) SANGAT BAIK
+                                                            @elseif($nilai->nilai >= 80) BAIK
+                                                            @elseif($nilai->nilai >= 70) CUKUP
+                                                            @else PERLU BIMBINGAN @endif
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            @endif
+                        </div>
                     </div>
                 @endforeach
-            @endif
-        </div>
+            </div>
+        @endif
     </div>
 </x-app-layout>
