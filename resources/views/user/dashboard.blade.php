@@ -49,6 +49,7 @@
                                 <div>
                                     <h2 class="text-2xl font-bold text-slate-800 leading-tight">{{ $item->nama }}</h2>
                                     <p class="text-sm font-bold text-slate-400 tracking-widest uppercase">NIS: {{ $item->nis }}</p>
+                                    <p class="text-sm font-bold text-slate-400 tracking-widest uppercase">Kelas: {{ $item->kelas->name }}</p>
                                 </div>
                             </div>
 

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Kelas;
 use App\Models\Siswa;
 use App\Models\User;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
@@ -15,7 +17,8 @@ class SiswaController extends Controller
     {
         $siswa = Siswa::with('orangTua')->latest()->paginate(7);
         $orangTua = User::where('role', 'user')->get();
-        return view('admin.siswa', compact('siswa', 'orangTua'));
+        $kelas = Kelas::with(['siswa.orangTua'])->get(); // load kelas with their siswa
+        return view('admin.siswa', compact('siswa', 'orangTua', 'kelas'));
     }
 
     public function store(Request $request)
@@ -28,6 +31,7 @@ class SiswaController extends Controller
                 'jenis_kelamin' => 'required|in:Laki-laki,Perempuan',
                 'tanggal_lahir' => 'required|date',
                 'orang_tua_id' => 'required|exists:users,id',
+                'kelas_id' => 'required|exists:kelas,id',
             ]);
 
             Siswa::create([
@@ -37,13 +41,16 @@ class SiswaController extends Controller
                 'jenis_kelamin' => $request->jenis_kelamin,
                 'tanggal_lahir' => $request->tanggal_lahir,
                 'orang_tua_id' => $request->orang_tua_id,
+                'kelas_id' => $request->kelas_id
             ]);
-        
+
             return redirect()->back()->with('success', 'Data Siswa Berhasil Ditambahkan');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Gagal menambahkan data siswa: ' . $e->getMessage());
         }
-    }    public function update(Request $request, $id)
+    }
+
+    public function update(Request $request, $id)
     {
         $siswa = Siswa::find($id);
         $siswa->update([
@@ -53,6 +60,7 @@ class SiswaController extends Controller
             'jenis_kelamin' => $request->jenis_kelamin,
             'tanggal_lahir' => $request->tanggal_lahir,
             'orang_tua_id' => $request->orang_tua_id,
+            'kelas_id' => $request->kelas_id
         ]);
 
         return redirect()->back()->with('success', 'Data Siswa Berhasil Diupdate');
@@ -66,7 +74,7 @@ class SiswaController extends Controller
         return redirect()->back()->with('success', 'Data Siswa Berhasil Dihapus');
     }
 
-    public function exportPDF() 
+    public function exportPDF()
     {
         $siswa = Siswa::all();
         $pdf = Pdf::loadView('admin.pdf.export-siswa', ['siswa' => $siswa]);

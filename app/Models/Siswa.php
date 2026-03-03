@@ -11,11 +11,16 @@ class Siswa extends Model
     protected $table = 'siswas';
     protected $primaryKey = 'id';
     public $incrementing = true; 
-    protected $fillable = ['nama', 'nis', 'alamat', 'jenis_kelamin', 'tanggal_lahir', 'orang_tua_id'];
+    protected $fillable = ['nama', 'nis', 'alamat', 'jenis_kelamin', 'tanggal_lahir', 'orang_tua_id', 'kelas_id'];
 
     public function orangTua()
     {
         return $this->belongsTo(User::class, 'orang_tua_id');
+    }
+
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'kelas_id');
     }
 
     public function nilai()

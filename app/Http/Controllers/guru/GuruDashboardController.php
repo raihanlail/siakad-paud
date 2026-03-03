@@ -7,9 +7,11 @@ use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MataPelajaran;
 use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Nilai;
+
 
 use Illuminate\Http\Request;
 
@@ -21,11 +23,12 @@ class GuruDashboardController extends Controller
         $siswa = Siswa::all();
         $guru = Guru::where('user_id', $user->id)->first();
         $mapel = MataPelajaran::where('id', $guru->mata_pelajaran_id)->get();
+        $kelas = Kelas::with('siswa')->get();
         
         $nilai = Nilai::with('mataPelajaran')->where('mata_pelajaran_id', $mapel[0]->id)->get();
        
         
-        return view('guru.dashboard', compact('user', 'guru', 'siswa', 'mapel', 'nilai'));
+        return view('guru.dashboard', compact('user', 'guru', 'siswa', 'mapel', 'nilai', 'kelas'));
     }
 
     public function store(Request $request)

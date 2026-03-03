@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\guru\GuruDashboardController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
 use App\Http\Controllers\PembayaranController;
@@ -11,6 +12,7 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\user\BayarController;
 use App\Http\Controllers\user\DaftarSiswaController;
 use App\Http\Controllers\User\UserController;
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Middleware\UserMiddleware;
@@ -50,6 +52,10 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function() {
     Route::post('/admin/guru',[GuruController::class, 'store'])->name('admin.guru.store');
     Route::put('/admin/guru/{id}', [GuruController::class, 'update'])->name('admin.guru.update');
     Route::delete('/admin/guru/{id}', [GuruController::class, 'destroy'])->name('admin.guru.destroy');
+     Route::get('/admin/kelas',[KelasController::class, 'index'])->name('admin.kelas');
+    Route::post('/admin/kelas',[KelasController::class, 'store'])->name('admin.kelas.store');
+    Route::put('/admin/kelas/{id}', [KelasController::class, 'update'])->name('admin.kelas.update');
+    Route::delete('/admin/kelas/{id}', [KelasController::class, 'destroy'])->name('admin.kelas.destroy');
     Route::get('/admin/siswa', [SiswaController::class, 'index'])->name('admin.siswa');
     Route::post('/admin/siswa', [SiswaController::class, 'store'])->name('admin.siswa.store');
     Route::put('/admin/siswa/{id}', [SiswaController::class, 'update'])->name('admin.siswa.update');

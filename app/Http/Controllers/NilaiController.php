@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Guru;
+use App\Models\Kelas;
 use App\Models\MataPelajaran;
 use App\Models\Nilai;
 use App\Models\Siswa;
@@ -33,11 +35,14 @@ class NilaiController extends Controller
 {
     $mataPelajaran = MataPelajaran::findOrFail($mata_pelajaran_id);
     $siswa = Siswa::all();
+    $kelas = Kelas::with('siswa')->get();
     $nilai = Nilai::with('siswa')
                   ->where('mata_pelajaran_id', $mata_pelajaran_id)
                   ->get();
+    $guru = Guru::with('mapel')->where('mata_pelajaran_id', $mata_pelajaran_id)->first();
+   
 
-    return view('admin.nilai.per-mapel', compact('mataPelajaran', 'nilai', 'siswa'));
+    return view('admin.nilai.per-mapel', compact('mataPelajaran', 'nilai', 'guru', 'siswa', 'kelas'));
 }
 
     public function exportPDF($mata_pelajaran_id)
