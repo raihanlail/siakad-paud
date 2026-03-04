@@ -197,59 +197,52 @@
     </div>
 
     {{-- ── Modal Tambah Nilai ───────────────────────────────────────────── --}}
-    <x-modal name="tambahNilaiModal" focusable>
-        <div class="relative w-full max-w-lg">
-            <div class="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
-                <div class="bg-gradient-to-r from-indigo-600 to-blue-500 px-6 py-5">
-                    <h3 class="text-lg font-bold text-white">Tambah Nilai Siswa</h3>
-                    <p class="text-indigo-100 text-xs mt-0.5">{{ $mataPelajaran->nama }}</p>
-                </div>
-                <div class="p-6">
-                    <form action="{{ route('admin.nilai.store') }}" method="POST" class="space-y-4">
-                        @csrf
-                        <div>
-                            <x-input-label for="siswa_id" value="{{ __('Nama Siswa') }}" />
-                            <select name="siswa_id" id="siswa_id" required
-                                class="mt-1 p-2.5 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
-                                <option value="">Pilih Siswa</option>
-                                @foreach ($kelas as $k)
-                                    <optgroup label="{{ $k->name }}">
-                                        @foreach ($k->siswa as $s)
-                                            <option value="{{ $s->id }}">{{ $s->nama }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div>
-                            <x-input-label for="add_nilai" value="{{ __('Nilai') }}" />
-                            <x-text-input id="add_nilai" name="nilai" type="number" min="0" max="100"
-                                class="mt-1 block w-full" placeholder="0 – 100" required />
-                        </div>
-                        <div>
-                            <x-input-label value="{{ __('Mata Pelajaran') }}" />
-                            <input type="hidden" name="mata_pelajaran_id" value="{{ $mataPelajaran->id }}">
-                            <x-text-input type="text" class="mt-1 block w-full bg-gray-50 text-gray-500"
-                                value="{{ $mataPelajaran->nama }}" readonly />
-                        </div>
-                        <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
-                            <x-secondary-button type="button" x-on:click="$dispatch('close')">Batal</x-secondary-button>
-                            <x-primary-button>Simpan</x-primary-button>
-                        </div>
-                    </form>
-                </div>
+   <x-modal name="tambahNilaiModal" focusable>
+    <div class="p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Tambah Nilai Siswa</h3>
+        <form action="{{ route('admin.nilai.store') }}" method="POST" class="space-y-4">
+            @csrf
+            <div>
+                <x-input-label for="siswa_id" value="{{ __('Nama Siswa') }}" />
+                <select name="siswa_id" id="siswa_id" required
+                    class="mt-1 p-2.5 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-sm">
+                    <option value="">Pilih Siswa</option>
+                    @foreach ($kelas as $k)
+                        <optgroup label="{{ $k->name }}">
+                            @foreach ($k->siswa as $s)
+                                <option value="{{ $s->id }}">{{ $s->nama }}</option>
+                            @endforeach
+                        </optgroup>
+                    @endforeach
+                </select>
             </div>
-        </div>
-    </x-modal>
+            <div>
+                <x-input-label for="add_nilai" value="{{ __('Nilai') }}" />
+                <x-text-input id="add_nilai" name="nilai" type="number" min="0" max="100"
+                    class="mt-1 block w-full" placeholder="0 – 100" required />
+            </div>
+            <div>
+                <x-input-label value="{{ __('Mata Pelajaran') }}" />
+                <input type="hidden" name="mata_pelajaran_id" value="{{ $mataPelajaran->id }}">
+                <x-text-input type="text" class="mt-1 block w-full bg-gray-50 text-gray-500"
+                    value="{{ $mataPelajaran->nama }}" readonly />
+            </div>
+            <div class="flex justify-end gap-2 pt-4 border-t border-gray-100">
+                <x-secondary-button type="button" x-on:click="$dispatch('close')">Batal</x-secondary-button>
+                <x-primary-button>Simpan</x-primary-button>
+            </div>
+        </form>
+    </div>
+</x-modal>
 
     {{-- ── Modal Edit Nilai ─────────────────────────────────────────────── --}}
     <x-modal name="editNilaiModal" focusable>
-        <div class="relative w-full max-w-lg">
-            <div class="relative bg-white rounded-2xl shadow-2xl overflow-hidden">
-                <div class="bg-gradient-to-r from-slate-700 to-slate-600 px-6 py-5">
-                    <h3 class="text-lg font-bold text-white">Edit Nilai Siswa</h3>
+        <div class="p-6">
+            <div class="">
+               
+                    <h3 class="text-lg font-bold text-gray-900">Edit Nilai Siswa</h3>
                     <p class="text-slate-300 text-xs mt-0.5">{{ $mataPelajaran->nama }}</p>
-                </div>
+               
                 <div class="p-6">
                     <form x-data="{ nilaiData: {} }" @set-nilai-data.window="nilaiData = $event.detail"
                         x-bind:action="'/admin/nilai/' + nilaiData.id" method="POST" class="space-y-4">
