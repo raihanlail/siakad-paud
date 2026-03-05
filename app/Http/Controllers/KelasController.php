@@ -10,8 +10,10 @@ use Illuminate\Http\Request;
 class KelasController extends Controller
 {
       public function index() {
-        $kelas = Kelas::with('siswa')->get();
-        $siswa = Siswa::all();
+       $kelas = Kelas::with(['siswa' => function ($query) {
+        $query->where('status', 'Verified');
+    }])->get();
+        $siswa = Siswa::where('status', 'Verified')->get();
         return view('admin.kelas', compact('kelas', 'siswa'));
     }
 

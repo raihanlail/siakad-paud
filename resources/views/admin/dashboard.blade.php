@@ -27,7 +27,6 @@
 
             {{-- ── Primary Stats ───────────────────────────────────────────── --}}
             <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
-
                 <a href="{{ route('admin.guru') }}"
                    class="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 p-6 flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
@@ -79,7 +78,92 @@
                         <p class="text-3xl font-black text-gray-800 leading-tight">{{ $kelasCount }}</p>
                     </div>
                 </a>
+            </div>
 
+            {{-- ── Siswa Registration Status ────────────────────────────────── --}}
+            @php
+                $pendingCount  = \App\Models\Siswa::where('status', 'Pending')->orWhereNull('status')->count();
+                $verifiedCount = \App\Models\Siswa::where('status', 'Verified')->count();
+                $rejectedCount = \App\Models\Siswa::where('status', 'Rejected')->count();
+                $totalReg      = $pendingCount + $verifiedCount + $rejectedCount;
+                $pctVerified   = $totalReg > 0 ? round(($verifiedCount / $totalReg) * 100) : 0;
+            @endphp
+
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                    <div>
+                        <h3 class="font-bold text-gray-800 text-sm">Status Pendaftaran Siswa</h3>
+                        <p class="text-xs text-gray-400 mt-0.5">Ringkasan verifikasi pendaftaran</p>
+                    </div>
+                    @if($pendingCount > 0)
+                        <a href="{{ route('admin.siswa') }}"
+                           class="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-600 bg-amber-50 border border-amber-200 px-3 py-1.5 rounded-lg hover:bg-amber-100 transition-colors">
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-amber-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-amber-500"></span>
+                            </span>
+                            {{ $pendingCount }} siswa menunggu konfirmasi
+                        </a>
+                    @else
+                        <a href="{{ route('admin.siswa') }}" class="text-xs font-semibold text-indigo-600 hover:text-indigo-800 transition-colors">
+                            Kelola Siswa →
+                        </a>
+                    @endif
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-100">
+
+                    {{-- Pending --}}
+                    <div class="px-6 py-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Menunggu Konfirmasi</p>
+                            <p class="text-3xl font-black text-amber-600 leading-tight">{{ $pendingCount }}</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">siswa perlu ditinjau</p>
+                        </div>
+                    </div>
+
+                    {{-- Verified --}}
+                    <div class="px-6 py-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Terverifikasi</p>
+                            <p class="text-3xl font-black text-emerald-600 leading-tight">{{ $verifiedCount }}</p>
+                            <div class="mt-2">
+                                <div class="flex justify-between text-[10px] text-gray-400 mb-1">
+                                    <span>Dari total pendaftar</span>
+                                    <span>{{ $pctVerified }}%</span>
+                                </div>
+                                <div class="w-full bg-gray-100 rounded-full h-1.5">
+                                    <div class="h-1.5 rounded-full bg-emerald-500 transition-all" style="width: {{ $pctVerified }}%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {{-- Rejected --}}
+                    <div class="px-6 py-5 flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center flex-shrink-0">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Ditolak</p>
+                            <p class="text-3xl font-black text-rose-600 leading-tight">{{ $rejectedCount }}</p>
+                            <p class="text-[11px] text-gray-400 mt-0.5">pendaftaran tidak disetujui</p>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
             {{-- ── Secondary Stats Row ─────────────────────────────────────── --}}
@@ -99,7 +183,6 @@
                             <p class="text-xs text-gray-500 mt-0.5">Belum Lunas</p>
                         </div>
                     </div>
-                    {{-- Progress bar --}}
                     @php $bayarTotal = $lunas + $belumBayar; $pctBayar = $bayarTotal > 0 ? round(($lunas / $bayarTotal) * 100) : 0; @endphp
                     <div class="mt-4">
                         <div class="flex justify-between text-[10px] text-gray-400 mb-1">
@@ -170,6 +253,11 @@
                 </div>
                 <div class="divide-y divide-gray-50">
                     @forelse ($recentSiswa as $s)
+                        @php
+                            $sStatus   = $s->status ?? 'Pending';
+                            $isVer     = $sStatus === 'Verified';
+                            $isRej     = $sStatus === 'Rejected';
+                        @endphp
                         <div class="flex items-center gap-4 px-6 py-3 hover:bg-gray-50 transition-colors">
                             <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 font-bold text-sm
                                 {{ $s->jenis_kelamin === 'Laki-laki' ? 'bg-blue-100 text-blue-600' : 'bg-pink-100 text-pink-600' }}">
@@ -179,11 +267,18 @@
                                 <p class="text-sm font-semibold text-gray-800 truncate">{{ $s->nama }}</p>
                                 <p class="text-xs text-gray-400">NIS: {{ $s->nis }}</p>
                             </div>
-                            <div class="text-right flex-shrink-0">
+                            <div class="flex items-center gap-2 flex-shrink-0">
                                 <span class="inline-block px-2 py-0.5 bg-indigo-50 text-indigo-700 rounded text-xs font-semibold">
                                     {{ $s->kelas->name ?? 'Belum ada kelas' }}
                                 </span>
-                                <p class="text-[10px] text-gray-400 mt-0.5">{{ $s->orangTua->name ?? '-' }}</p>
+                                <span class="px-2 py-0.5 rounded-full text-[10px] font-bold border
+                                    @if($isVer) bg-emerald-50 text-emerald-700 border-emerald-100
+                                    @elseif($isRej) bg-rose-50 text-rose-700 border-rose-100
+                                    @else bg-amber-50 text-amber-700 border-amber-100 @endif">
+                                    @if($isVer) ✓ Verified
+                                    @elseif($isRej) ✕ Ditolak
+                                    @else ⏳ Pending @endif
+                                </span>
                             </div>
                         </div>
                     @empty

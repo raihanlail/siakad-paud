@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use App\Models\MataPelajaran;
 use App\Models\Guru;
+use App\Models\OrangTua;
+
+
 use Illuminate\View\View;
 
 class RegisteredUserController extends Controller
@@ -36,6 +39,8 @@ class RegisteredUserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'role' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:255'],
+            'alamat' => ['nullable', 'string', 'max:255'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
@@ -55,6 +60,17 @@ class RegisteredUserController extends Controller
             $guru->alamat = $request->alamat;
             $guru->mata_pelajaran_id = $request->mata_pelajaran_id;
             $guru->save();
+        }
+
+        if ($request->role === 'user') {
+            $orangTua = new OrangTua();
+            $orangTua->user_id = $user->id;
+            $orangTua->nama = $request->name;
+            $orangTua->alamat = $request->alamat;
+            $orangTua->email = $request->email;
+            $orangTua->phone = $request->phone;
+            $orangTua->save();
+
         }
 
         event(new Registered($user));

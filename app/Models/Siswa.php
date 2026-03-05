@@ -11,7 +11,7 @@ class Siswa extends Model
     protected $table = 'siswas';
     protected $primaryKey = 'id';
     public $incrementing = true; 
-    protected $fillable = ['nama', 'nis', 'alamat', 'jenis_kelamin', 'tanggal_lahir', 'orang_tua_id', 'kelas_id'];
+    protected $fillable = ['nama', 'nis', 'alamat', 'jenis_kelamin', 'tanggal_lahir', 'orang_tua_id', 'kelas_id', 'status'];
 
     public function orangTua()
     {

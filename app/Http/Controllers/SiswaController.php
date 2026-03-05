@@ -50,6 +50,16 @@ class SiswaController extends Controller
         }
     }
 
+    public function verify($id) {
+    Siswa::find($id)->update(['status' => 'Verified']);
+    return redirect()->back()->with('success', 'Siswa berhasil diverifikasi.');
+}
+
+public function reject($id) {
+    Siswa::find($id)->update(['status' => 'Rejected']);
+    return redirect()->back()->with('success', 'Pendaftaran siswa ditolak.');
+}
+
     public function update(Request $request, $id)
     {
         $siswa = Siswa::find($id);

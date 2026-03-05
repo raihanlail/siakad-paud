@@ -18,18 +18,26 @@ use Illuminate\Http\Request;
 class GuruDashboardController extends Controller
 {
     public function index()
-    {
-        $user = Auth::user();
-        $siswa = Siswa::all();
-        $guru = Guru::where('user_id', $user->id)->first();
-        $mapel = MataPelajaran::where('id', $guru->mata_pelajaran_id)->get();
-        $kelas = Kelas::with('siswa')->get();
-        
-        $nilai = Nilai::with('mataPelajaran')->where('mata_pelajaran_id', $mapel[0]->id)->get();
-       
-        
-        return view('guru.dashboard', compact('user', 'guru', 'siswa', 'mapel', 'nilai', 'kelas'));
-    }
+{
+    $user = Auth::user();
+    $guru = Guru::where('user_id', $user->id)->first();
+    $mapel = MataPelajaran::where('id', $guru->mata_pelajaran_id)->get();
+
+    // Only load verified siswa inside each kelas
+    $kelas = Kelas::with(['siswa' => function ($query) {
+        $query->where('status', 'Verified');
+    }])->get();
+
+    // Also keep the flat list filtered to verified only
+    $siswa = Siswa::where('status', 'Verified')->get();
+
+    $nilai = Nilai::with('mataPelajaran')
+                  ->where('mata_pelajaran_id', $mapel[0]->id)
+                  ->get();
+
+    return view('guru.dashboard', compact('user', 'guru', 'siswa', 'mapel', 'nilai', 'kelas'));
+}
+
 
     public function store(Request $request)
     {

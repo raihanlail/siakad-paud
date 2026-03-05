@@ -6,6 +6,7 @@ use App\Http\Controllers\GuruController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
+use App\Http\Controllers\OrangTuaController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SiswaController;
@@ -52,6 +53,7 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function() {
     Route::post('/admin/guru',[GuruController::class, 'store'])->name('admin.guru.store');
     Route::put('/admin/guru/{id}', [GuruController::class, 'update'])->name('admin.guru.update');
     Route::delete('/admin/guru/{id}', [GuruController::class, 'destroy'])->name('admin.guru.destroy');
+    Route::get('/admin/orang-tua', [OrangTuaController::class, 'index'])->name('admin.orang-tua');
      Route::get('/admin/kelas',[KelasController::class, 'index'])->name('admin.kelas');
     Route::post('/admin/kelas',[KelasController::class, 'store'])->name('admin.kelas.store');
     Route::put('/admin/kelas/{id}', [KelasController::class, 'update'])->name('admin.kelas.update');
@@ -59,6 +61,8 @@ Route::middleware(['auth', 'adminMiddleware'])->group(function() {
     Route::get('/admin/siswa', [SiswaController::class, 'index'])->name('admin.siswa');
     Route::post('/admin/siswa', [SiswaController::class, 'store'])->name('admin.siswa.store');
     Route::put('/admin/siswa/{id}', [SiswaController::class, 'update'])->name('admin.siswa.update');
+    Route::put('admin/siswa/{id}/verify', [SiswaController::class, 'verify'])->name('admin.siswa.verify');
+Route::put('admin/siswa/{id}/reject', [SiswaController::class, 'reject'])->name('admin.siswa.reject');
     Route::delete('/admin/siswa/{id}', [SiswaController::class, 'destroy'])->name('admin.siswa.destroy');
     Route::get('/admin/siswa/download', [SiswaController::class, 'ExportPDF'])->name('admin.siswa.download');
     Route::get('/admin/mapel', action:[MapelController::class, 'index'])->name('admin.mapel');
