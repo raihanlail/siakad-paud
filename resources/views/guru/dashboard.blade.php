@@ -41,35 +41,58 @@
                     <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
                 </div>
                 <h4 class="font-bold text-lg leading-tight mb-2">Manajemen Nilai</h4>
-                <p class="text-blue-100 text-xs mb-6 px-4 text-balance">Input nilai siswa terbaru untuk mata pelajaran {{ $mapel[0]->nama }} secara instan.</p>
-                <button
-                    x-data=""
-                    x-on:click.prevent="$dispatch('open-modal', 'tambahNilaiModal')"
+                <p class="text-blue-100 text-xs mb-6 px-4">Input nilai siswa terbaru untuk mata pelajaran {{ $mapel[0]->nama }} secara instan.</p>
+                <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'tambahNilaiModal')"
                     class="w-full py-3 bg-white text-blue-700 rounded-xl font-bold text-sm shadow-sm hover:bg-blue-50 transition active:scale-95">
                     {{ __('Tambah Nilai Siswa') }}
                 </button>
             </div>
         </div>
 
-        <!-- Nilai Table with Kelas Tabs -->
-        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden"
-             x-data="{ activeTab: 'semua' }">
+        {{-- Nilai Table --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden" x-data="{ activeTab: 'semua' }">
 
-            <!-- Table Header -->
+            {{-- Table Header --}}
             <div class="px-8 py-5 border-b border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center bg-slate-50/30 gap-4">
                 <div>
                     <h3 class="font-bold text-slate-800 text-base">{{ __('Daftar Nilai Siswa') }}</h3>
                     <p class="text-xs text-slate-500 font-medium">Pengelolaan nilai akademik siswa per mata pelajaran</p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="hidden md:flex flex-col items-end mr-2">
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+
+                    {{-- Search --}}
+                    <form method="GET" action="{{ route('guru.dashboard') }}" class="flex items-center gap-1.5">
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
+                                </svg>
+                            </div>
+                            <input type="text" name="search" value="{{ request('search') }}"
+                                placeholder="Cari nama atau NIS..."
+                                class="pl-8 pr-8 py-1.5 text-xs border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white w-48 transition-all"/>
+                            @if(request('search'))
+                                <a href="{{ route('guru.dashboard') }}" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-slate-400 hover:text-slate-600">
+                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </a>
+                            @endif
+                        </div>
+                        <button type="submit" class="px-3 py-1.5 bg-blue-600 text-white text-xs font-semibold rounded-lg hover:bg-blue-700 transition-colors">
+                            Cari
+                        </button>
+                    </form>
+
+                    <div class="hidden md:flex flex-col items-end">
                         <span class="text-[10px] font-black text-slate-400 uppercase tracking-tighter">Populasi Data</span>
                         <span class="text-blue-600 font-bold text-sm">{{ count($nilai) }} Siswa</span>
                     </div>
+
                     <a href="{{ route('guru.download') }}" class="group">
                         <x-secondary-button class="rounded-xl border-slate-200 hover:bg-slate-50 font-bold text-xs py-2.5 shadow-sm transition-all group-hover:border-blue-300 group-hover:text-blue-600">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10" />
+                            <svg class="h-4 w-4 mr-2 text-rose-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"/>
                             </svg>
                             {{ __('Unduh PDF') }}
                         </x-secondary-button>
@@ -77,35 +100,37 @@
                 </div>
             </div>
 
-            <!-- Kelas Tab Buttons -->
-            <div class="px-8 pt-4 pb-0 flex flex-wrap gap-2 border-b border-slate-100">
-                <button
-                    @click="activeTab = 'semua'"
-                    :class="activeTab === 'semua'
-                        ? 'border-b-2 border-blue-600 text-blue-600 font-black'
-                        : 'text-slate-400 hover:text-slate-600'"
-                    class="pb-3 px-1 text-xs uppercase tracking-widest font-bold transition-colors duration-150">
-                    Semua
-                    <span class="ml-1 text-[10px] opacity-60">({{ count($nilai) }})</span>
-                </button>
+            {{-- Search result notice --}}
+            @if(request('search'))
+                <div class="px-8 py-2 bg-blue-50 border-b border-blue-100 flex items-center justify-between">
+                    <p class="text-xs text-blue-700">
+                        Hasil pencarian untuk <span class="font-bold">"{{ request('search') }}"</span>
+                        — ditemukan <span class="font-bold">{{ count($nilai) }}</span> data nilai
+                    </p>
+                    <a href="{{ route('guru.dashboard') }}" class="text-xs text-blue-500 hover:text-blue-700 font-semibold">
+                        Hapus pencarian ✕
+                    </a>
+                </div>
+            @endif
 
+            {{-- Kelas Tab Buttons --}}
+            <div class="px-8 pt-4 pb-0 flex flex-wrap gap-2 border-b border-slate-100">
+                <button @click="activeTab = 'semua'"
+                    :class="activeTab === 'semua' ? 'border-b-2 border-blue-600 text-blue-600 font-black' : 'text-slate-400 hover:text-slate-600'"
+                    class="pb-3 px-1 text-xs uppercase tracking-widest font-bold transition-colors duration-150">
+                    Semua <span class="ml-1 text-[10px] opacity-60">({{ count($nilai) }})</span>
+                </button>
                 @foreach ($kelas as $k)
-                    @php
-                        $kelasNilaiCount = $nilai->filter(fn($n) => $n->siswa && $n->siswa->kelas_id == $k->id)->count();
-                    @endphp
-                    <button
-                        @click="activeTab = '{{ $k->id }}'"
-                        :class="activeTab === '{{ $k->id }}'
-                            ? 'border-b-2 border-blue-600 text-blue-600 font-black'
-                            : 'text-slate-400 hover:text-slate-600'"
+                    @php $kelasNilaiCount = $nilai->filter(fn($n) => $n->siswa && $n->siswa->kelas_id == $k->id)->count(); @endphp
+                    <button @click="activeTab = '{{ $k->id }}'"
+                        :class="activeTab === '{{ $k->id }}' ? 'border-b-2 border-blue-600 text-blue-600 font-black' : 'text-slate-400 hover:text-slate-600'"
                         class="pb-3 px-1 text-xs uppercase tracking-widest font-bold transition-colors duration-150">
-                        {{ $k->name }}
-                        <span class="ml-1 text-[10px] opacity-60">({{ $kelasNilaiCount }})</span>
+                        {{ $k->name }} <span class="ml-1 text-[10px] opacity-60">({{ $kelasNilaiCount }})</span>
                     </button>
                 @endforeach
             </div>
 
-            <!-- Table -->
+            {{-- Table --}}
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -126,9 +151,17 @@
                                     <span class="text-slate-400 font-mono text-xs">{{ sprintf('%02d', $index + 1) }}</span>
                                 </td>
                                 <td class="px-8 py-5">
-                                    <div class="font-bold text-slate-700 leading-tight">{{ $g->siswa->nama ?? '-' }}</div>
+                                    <div class="font-bold text-slate-700 leading-tight">
+                                        @if(request('search'))
+                                            {!! preg_replace('/(' . preg_quote(request('search'), '/') . ')/i', '<mark class="bg-yellow-100 text-yellow-800 rounded px-0.5">$1</mark>', e($g->siswa->nama ?? '-')) !!}
+                                        @else
+                                            {{ $g->siswa->nama ?? '-' }}
+                                        @endif
+                                    </div>
                                     <div class="flex items-center mt-1">
-                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-bold uppercase mr-2">NIS: {{ $g->siswa->nis ?? '-' }}</span>
+                                        <span class="text-[10px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded font-bold uppercase mr-2">
+                                            NIS: @if(request('search')){!! preg_replace('/(' . preg_quote(request('search'), '/') . ')/i', '<mark class="bg-yellow-100 text-yellow-800 rounded px-0.5">$1</mark>', e($g->siswa->nis ?? '-')) !!}@else{{ $g->siswa->nis ?? '-' }}@endif
+                                        </span>
                                         <span class="text-[10px] text-blue-500 font-bold uppercase tracking-tighter">{{ $g->mataPelajaran->nama ?? '-' }}</span>
                                     </div>
                                 </td>
@@ -149,9 +182,7 @@
                                     </span>
                                 </td>
                                 <td class="px-8 py-5 text-right">
-                                    <button
-                                        x-data=""
-                                        x-on:click.prevent="$dispatch('open-modal', 'editNilaiModal')"
+                                    <button x-data="" x-on:click.prevent="$dispatch('open-modal', 'editNilaiModal')"
                                         @click="$dispatch('set-nilai-data', {
                                             id: '{{ $g->id }}',
                                             nama: '{{ $g->siswa->nama }}',
@@ -173,7 +204,13 @@
                                         <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mb-4">
                                             <svg class="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
                                         </div>
-                                        <p class="font-bold text-slate-400 uppercase tracking-widest text-[10px]">{{ __('Belum Ada Data Nilai Masuk') }}</p>
+                                        <p class="font-bold text-slate-400 uppercase tracking-widest text-[10px]">
+                                            @if(request('search'))
+                                                Tidak ada nilai untuk "{{ request('search') }}"
+                                            @else
+                                                {{ __('Belum Ada Data Nilai Masuk') }}
+                                            @endif
+                                        </p>
                                     </div>
                                 </td>
                             </tr>
@@ -184,7 +221,7 @@
         </div>
     </div>
 
-    <!-- Modal Tambah Nilai -->
+    {{-- Modal Tambah Nilai --}}
     <x-modal name="tambahNilaiModal" focusable>
         <div class="p-8">
             <h3 class="text-xl font-bold text-slate-800 mb-6">{{ __('Tambah Nilai Siswa') }}</h3>
@@ -222,7 +259,7 @@
         </div>
     </x-modal>
 
-    <!-- Modal Edit Nilai -->
+    {{-- Modal Edit Nilai --}}
     <x-modal name="editNilaiModal" focusable>
         <div class="p-8">
             <h3 class="text-xl font-bold text-slate-800 mb-6">{{ __('Edit Nilai Siswa') }}</h3>

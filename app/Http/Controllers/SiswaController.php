@@ -13,13 +13,24 @@ use Illuminate\Http\Request;
 
 class SiswaController extends Controller
 {
-    public function index()
-    {
-        $siswa = Siswa::with('orangTua')->latest()->paginate(7);
-        $orangTua = User::where('role', 'user')->get();
-        $kelas = Kelas::with(['siswa.orangTua'])->get(); // load kelas with their siswa
-        return view('admin.siswa', compact('siswa', 'orangTua', 'kelas'));
-    }
+  public function index(Request $request)
+{
+    $search = $request->get('search');
+
+    $siswa = Siswa::with(['kelas', 'bayar', 'orangTua'])
+        ->when($search, function ($query) use ($search) {
+            $query->where('nama', 'like', "%{$search}%")
+                  ->orWhere('nis', 'like', "%{$search}%");
+        })
+        ->latest()
+        ->paginate(10);
+         // keeps search param on pagination links
+
+    $kelas     = Kelas::withCount('siswa')->get();
+    $orangTua  = User::where('role', 'user')->get();
+
+    return view('admin.siswa', compact('siswa', 'kelas', 'orangTua'));
+}
 
     public function store(Request $request)
     {

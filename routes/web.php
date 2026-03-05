@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\guru\GuruDashboardController;
 use App\Http\Controllers\GuruController;
+use App\Http\Controllers\JadwalController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\MapelController;
 use App\Http\Controllers\NilaiController;
@@ -13,6 +14,8 @@ use App\Http\Controllers\SiswaController;
 use App\Http\Controllers\user\BayarController;
 use App\Http\Controllers\user\DaftarSiswaController;
 use App\Http\Controllers\User\UserController;
+
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -36,6 +39,7 @@ Route::middleware(['auth', 'guruMiddleware'])->group(function() {
     Route::post('/guru/dashboard',[GuruDashboardController::class, 'store'])->name('guru.dashboard.store');
      Route::get('/guru/download',[GuruDashboardController::class, 'exportPDF'])->name('guru.download');
     Route::put('/guru/dashboard/{id}', [GuruDashboardController::class, 'update'])->name('guru.dashboard.update');
+    Route::get('/guru/jadwal', [GuruDashboardController::class, 'jadwal'])->name('guru.jadwal');
 });
    
 
@@ -74,6 +78,10 @@ Route::put('admin/siswa/{id}/reject', [SiswaController::class, 'reject'])->name(
     Route::get('/admin/nilai/download/{mata_pelajaran_id}', [NilaiController::class, 'ExportPDF'])->name('admin.nilai.download');
     Route::get('/admin/pembayaran', [PembayaranController::class, 'index'])->name('admin.pembayaran');
     Route::put('/admin/pembayaran/{id}', [PembayaranController::class, 'update'])->name('admin.pembayaran.update');
+    Route::get('/admin/jadwal', [JadwalController::class, 'index'])->name('admin.jadwal');
+    Route::post('/admin/jadwal', [JadwalController::class, 'store'])->name('admin.jadwal.store');
+    Route::put('/admin/jadwal/{id}', [JadwalController::class, 'update'])->name('admin.jadwal.update');
+    Route::delete('/admin/jadwal/{id}', [JadwalController::class, 'destroy'])->name('admin.jadwal.destroy');
 
     
     
@@ -90,6 +98,7 @@ Route::middleware(['auth', 'userMiddleware'])->group(function() {
     Route::post('/user/daftar', [DaftarSiswaController::class, 'store'])->name('user.daftar.store');
     Route::get('/user/bayar', [BayarController::class, 'index'])->name('user.bayar');
     Route::post('/user/bayar', [BayarController::class, 'store'])->name('user.bayar.store');
+    Route::get('user/jadwal', [UserController::class, 'jadwal'])->name('user.jadwal');
     
 
 });

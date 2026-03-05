@@ -105,7 +105,36 @@
                         <h3 class="font-bold text-gray-800 text-sm">Daftar Siswa</h3>
                         <p class="text-[11px] text-gray-400 mt-0.5">Filter berdasarkan kelas dan status pendaftaran</p>
                     </div>
-                    <div class="flex gap-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+
+                        {{-- Search box --}}
+                        <form method="GET" action="{{ route('admin.siswa') }}" class="flex items-center gap-1.5">
+                            <div class="relative">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M17 11A6 6 0 105 11a6 6 0 0012 0z"/>
+                                    </svg>
+                                </div>
+                                <input
+                                    type="text"
+                                    name="search"
+                                    value="{{ request('search') }}"
+                                    placeholder="Cari nama atau NIS..."
+                                    class="pl-8 pr-8 py-1.5 text-xs border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 bg-white w-52 transition-all"
+                                />
+                                @if(request('search'))
+                                    <a href="{{ route('admin.siswa') }}" class="absolute inset-y-0 right-0 flex items-center pr-2.5 text-gray-400 hover:text-gray-600">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </a>
+                                @endif
+                            </div>
+                            <button type="submit" class="px-3 py-1.5 bg-indigo-600 text-white text-xs font-semibold rounded-lg hover:bg-indigo-700 transition-colors">
+                                Cari
+                            </button>
+                        </form>
+
                         <x-secondary-button onclick="window.location.href='{{ route('admin.siswa.download') }}'">
                             ↓ PDF
                         </x-secondary-button>
@@ -114,6 +143,19 @@
                         </x-primary-button>
                     </div>
                 </div>
+
+                {{-- Search result notice --}}
+                @if(request('search'))
+                    <div class="px-5 py-2 bg-indigo-50 border-b border-indigo-100 flex items-center justify-between">
+                        <p class="text-xs text-indigo-700">
+                            Hasil pencarian untuk <span class="font-bold">"{{ request('search') }}"</span>
+                            — ditemukan <span class="font-bold">{{ $siswa->total() }}</span> siswa
+                        </p>
+                        <a href="{{ route('admin.siswa') }}" class="text-xs text-indigo-500 hover:text-indigo-700 font-semibold">
+                            Hapus pencarian ✕
+                        </a>
+                    </div>
+                @endif
 
                 {{-- Kelas Tabs --}}
                 <div class="px-5 pt-2.5 flex flex-wrap gap-0.5 border-b border-gray-100">
@@ -248,7 +290,11 @@
 
                                     {{-- Orang Tua --}}
                                     <td class="px-4 py-2.5">
-                                        <p class="text-[11px] text-gray-700 font-medium leading-tight">{{ $g->orangTua->name ?? '—' }}</p>
+                                        <a href={{route('admin.orang-tua') . '?search=' . urlencode($g->orangTua->name ?? '')}} >
+
+
+                                            <p class="text-[11px] text-gray-700 font-medium leading-tight">{{ $g->orangTua->name ?? '—' }}</p>
+                                        </a>
                                     </td>
 
                                     {{-- Bayar --}}

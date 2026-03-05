@@ -7,33 +7,40 @@ use App\Models\Siswa;
 use Illuminate\Support\Facades\Auth;
 use App\Models\MataPelajaran;
 use App\Models\Guru;
+use App\Models\Jadwal;
 use App\Models\Kelas;
 use App\Models\User;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Nilai;
 
 
+
 use Illuminate\Http\Request;
 
 class GuruDashboardController extends Controller
 {
-    public function index()
+   public function index(Request $request)
 {
-    $user = Auth::user();
-    $guru = Guru::where('user_id', $user->id)->first();
-    $mapel = MataPelajaran::where('id', $guru->mata_pelajaran_id)->get();
+    $user   = Auth::user();
+    $search = $request->get('search');
+    $guru   = Guru::where('user_id', $user->id)->first();
+    $mapel  = MataPelajaran::where('id', $guru->mata_pelajaran_id)->get();
 
-    // Only load verified siswa inside each kelas
     $kelas = Kelas::with(['siswa' => function ($query) {
         $query->where('status', 'Verified');
     }])->get();
 
-    // Also keep the flat list filtered to verified only
     $siswa = Siswa::where('status', 'Verified')->get();
 
-    $nilai = Nilai::with('mataPelajaran')
-                  ->where('mata_pelajaran_id', $mapel[0]->id)
-                  ->get();
+    $nilai = Nilai::with(['mataPelajaran', 'siswa.kelas'])
+        ->where('mata_pelajaran_id', $mapel[0]->id)
+        ->when($search, function ($query) use ($search) {
+            $query->whereHas('siswa', function ($q) use ($search) {
+                $q->where('nama', 'like', "%{$search}%")
+                  ->orWhere('nis',  'like', "%{$search}%");
+            });
+        })
+        ->get();
 
     return view('guru.dashboard', compact('user', 'guru', 'siswa', 'mapel', 'nilai', 'kelas'));
 }
@@ -94,6 +101,23 @@ class GuruDashboardController extends Controller
     ]);
 
     return $pdf->download('Data-Nilai-' . $mapel->nama . '.pdf');
+}
+
+public function jadwal()
+{
+    $user = Auth::user();
+
+    $guru = Guru::where('user_id', $user->id)->firstOrFail();
+
+    $mapel = MataPelajaran::findOrFail($guru->mata_pelajaran_id);
+
+    $jadwal = Jadwal::with(['kelas', 'mataPelajaran'])
+        ->where('guru_id', $guru->id)
+        ->orderByRaw("FIELD(hari, 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu')")
+        ->get()
+        ->groupBy('hari');
+
+    return view('guru.jadwal', compact('guru', 'mapel', 'jadwal'));
 }
 
 
