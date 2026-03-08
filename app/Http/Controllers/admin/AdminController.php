@@ -7,9 +7,12 @@ use App\Models\MataPelajaran;
 use App\Models\User;
 use App\Models\Guru;
 use App\Models\Kelas;
+use App\Models\Nilai;
+use App\Models\Pembayaran;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+
 
 
 
@@ -25,14 +28,14 @@ class AdminController extends Controller
     $kelasCount = Kelas::count();
 
     // Payment stats
-    $lunas    = \App\Models\Pembayaran::where('status', 'lunas')->count();
+    $lunas    = Pembayaran::where('status', 'lunas')->count();
     $belumBayar = Siswa::doesntHave('bayar')->count()
-                + \App\Models\Pembayaran::where('status', '!=', 'lunas')->count();
+                + Pembayaran::where('status', '!=', 'lunas')->count();
 
     // Nilai stats
-    $nilaiTuntas   = \App\Models\Nilai::where('nilai', '>=', 75)->count();
-    $nilaiRemedial = \App\Models\Nilai::where('nilai', '<', 75)->count();
-    $rataRata      = \App\Models\Nilai::avg('nilai');
+    $nilaiTuntas   = Nilai::where('nilai', '>=', 75)->count();
+    $nilaiRemedial = Nilai::where('nilai', '<', 75)->count();
+    $rataRata      = Nilai::avg('nilai');
 
     // Recent siswa (last 5)
     $recentSiswa = Siswa::with(['kelas', 'orangTua'])

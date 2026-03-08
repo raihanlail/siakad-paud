@@ -11,7 +11,7 @@
             @php
                 $hariList = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
                 $hariColors = [
-                    'Senin'   => ['bg' => 'bg-blue-500',   'light' => 'bg-blue-50',   'text' => 'text-gray-700',   'border' => 'border-blue-200',  'badge' => 'bg-blue-100 text-blue-700'],
+                    'Senin'   => ['bg' => 'bg-blue-500',   'light' => 'bg-blue-50',   'text' => 'text-blue-700',   'border' => 'border-blue-200',  'badge' => 'bg-blue-100 text-blue-700'],
                     'Selasa'  => ['bg' => 'bg-violet-500', 'light' => 'bg-violet-50', 'text' => 'text-violet-700', 'border' => 'border-violet-200','badge' => 'bg-violet-100 text-violet-700'],
                     'Rabu'    => ['bg' => 'bg-emerald-500','light' => 'bg-emerald-50','text' => 'text-emerald-700','border' => 'border-emerald-200','badge' => 'bg-emerald-100 text-emerald-700'],
                     'Kamis'   => ['bg' => 'bg-amber-500',  'light' => 'bg-amber-50',  'text' => 'text-amber-700',  'border' => 'border-amber-200', 'badge' => 'bg-amber-100 text-amber-700'],
@@ -240,8 +240,28 @@
     </div>
 
     {{-- ── Modal Tambah Jadwal ─────────────────────────────────────────── --}}
+    @php
+        // Build a map: mapel_id => [ { id, nama }, ... ] for Alpine filtering
+        // Use $g->mapel->id from the eager-loaded relationship (avoids guessing FK column name)
+        $guruByMapel = [];
+        foreach($guru as $g) {
+            $mid = $g->mapel?->id;
+            if (!$mid) continue;
+            $guruByMapel[$mid][] = ['id' => $g->id, 'nama' => $g->nama, 'mapel' => $g->mapel->nama];
+        }
+        $guruByMapelJson = json_encode($guruByMapel);
+    @endphp
+
     <x-modal name="tambahJadwalModal" focusable>
-        <div class="p-6">
+        <div class="p-6"
+             x-data="{
+                selectedMapel: '',
+                guruByMapel: {{ $guruByMapelJson }},
+                get filteredGuru() {
+                    if (!this.selectedMapel) return [];
+                    return this.guruByMapel[parseInt(this.selectedMapel)] ?? [];
+                }
+             }">
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Tambah Jadwal Kelas</h3>
             <form action="{{ route('admin.jadwal.store') }}" method="POST" class="space-y-4">
                 @csrf
@@ -261,6 +281,7 @@
                     <div>
                         <x-input-label for="mata_pelajaran_id" value="Mata Pelajaran" />
                         <select name="mata_pelajaran_id" id="mata_pelajaran_id" required
+                            x-model="selectedMapel"
                             class="mt-1 p-2.5 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 text-sm">
                             <option value="">Pilih Mata Pelajaran</option>
                             @foreach($mapel as $m)
@@ -271,13 +292,29 @@
 
                     <div class="sm:col-span-2">
                         <x-input-label for="guru_id" value="Guru Pengampu" />
-                        <select name="guru_id" id="guru_id" required
+
+                        {{-- Placeholder shown before mapel is selected --}}
+                        <div x-show="!selectedMapel"
+                             class="mt-1 p-2.5 w-full border border-dashed border-gray-200 rounded-md bg-gray-50 text-sm text-gray-400 italic select-none">
+                            Pilih mata pelajaran terlebih dahulu
+                        </div>
+
+                        {{-- Actual select, shown after mapel selected --}}
+                        <select name="guru_id" id="guru_id"
+                            x-show="selectedMapel"
+                            :required="!!selectedMapel"
                             class="mt-1 p-2.5 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500 text-sm">
                             <option value="">Pilih Guru</option>
-                            @foreach($guru as $g)
-                                <option value="{{ $g->id }}">{{ $g->nama }} — {{ $g->mapel->nama ?? '—' }}</option>
-                            @endforeach
+                            <template x-for="g in filteredGuru" :key="g.id">
+                                <option :value="g.id" x-text="g.nama + ' — ' + g.mapel"></option>
+                            </template>
                         </select>
+
+                        {{-- Empty state when mapel has no guru assigned --}}
+                        <p x-show="selectedMapel && filteredGuru.length === 0"
+                           class="mt-1.5 text-[11px] text-amber-600 font-semibold">
+                            ⚠ Tidak ada guru yang mengampu mata pelajaran ini.
+                        </p>
                     </div>
 
                     <div>

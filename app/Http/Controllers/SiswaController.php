@@ -95,10 +95,30 @@ public function reject($id) {
         return redirect()->back()->with('success', 'Data Siswa Berhasil Dihapus');
     }
 
-    public function exportPDF()
-    {
-        $siswa = Siswa::all();
-        $pdf = Pdf::loadView('admin.pdf.export-siswa', ['siswa' => $siswa]);
-        return $pdf->download('data-siswa.pdf');
-    }
+    public function exportPDF(Request $request)
+{
+    $kelasId = $request->get('kelas_id');
+
+    $siswa = Siswa::with(['kelas', 'orangTua', 'bayar'])
+        ->where('status', 'Verified')
+        ->when($kelasId, fn($q) => $q->where('kelas_id', $kelasId))
+        ->orderBy('nama')
+        ->get();
+
+    $kelas      = Kelas::orderBy('name')->get();
+    $kelasLabel = $kelasId
+        ? ($kelas->find($kelasId)?->name ?? 'Kelas Tidak Dikenal')
+        : 'Semua Kelas';
+
+    $pdf = Pdf::loadView('admin.pdf.export-siswa', [
+        'siswa'      => $siswa,
+        'kelasLabel' => $kelasLabel,
+    ])->setPaper('a4', 'portrait');
+
+    $slug     = str_replace(' ', '-', strtolower($kelasLabel));
+    $filename = 'data-siswa-' . $slug . '-' . date('Ymd') . '.pdf';
+
+    return $pdf->download($filename);
+}
+
 }
